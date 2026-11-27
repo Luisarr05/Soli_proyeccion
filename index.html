@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Crédito y Proyecciones Financieras - Portal Corporativo</title>
+    <!-- Tailwind CSS CDN sincronizado con la paleta ejecutiva del Portal Principal y AFE -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bbva: {
+                            navy: '#070E46',
+                            blue: '#001391',
+                            serene: '#85C8FF',
+                            teal: '#0F5C6E',
+                            slate: '#1B365D',
+                            lightBg: '#F4F6F9',
+                            cardBg: '#FFFFFF',
+                            calcBg: '#EBF1F8',
+                            border: '#D5DFEC'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 para alertas ejecutivas e historial de carpetas en Drive -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* ==========================================================================
+           SISTEMA DE DISEÑO EJECUTIVO HOMOLOGADO CON INDEX.HTML Y SUBPÁGINA AFE
+           ========================================================================== */
+        .ct-master-wrap {
+            --bbva-sand: #F4F6F9;
+            --bbva-serene: #85C8FF;
+            --bbva-electric: #001391;
+            --bbva-midnight: #070E46;
+            --bbva-white: #FFFFFF;
+
+            --ct-slate-teal: #0F5C6E;
+            --ct-indigo-slate: #1B365D;
+            --ct-emerald-corp: #0D6E6E;
+
+            --bbva-gray-100: #E6ECF2;
+            --bbva-gray-200: #D0D9E4;
+            --bbva-gray-600: #4A5568;
+
+            --bbva-accent-yellow: #FFE761;
+            --bbva-accent-aqua: #8CE8EA;
+
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--bbva-midnight);
+            background-color: var(--bbva-sand);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F4F6F9;
+            color: #070E46;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ct-container {
+            max-width: 1260px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* Bandas alternadas con respiración visual idénticas a la subpágina AFE */
+        .ct-band-white {
+            background-color: var(--bbva-white);
+            padding: 52px 0;
+            border-bottom: 1px solid var(--bbva-gray-100);
+        }
+
+        .ct-band-sand {
+            background-color: var(--bbva-sand);
+            padding: 52px 0;
+            border-bottom: 1px solid var(--bbva-gray-100);
+        }
+
+        /* Tipografía Georgia Institucional */
+        .ct-serif {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            line-height: 1.12;
+            color: var(--bbva-midnight);
+        }
+
+        .ct-serif-electric {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--bbva-electric);
+        }
+
+        .ct-serif-large {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            line-height: 0.98;
+        }
+
+        /* Etiqueta de paso ejecutivo */
+        .ct-step-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #EEF4FF;
+            color: var(--bbva-electric);
+            border: 1px solid rgba(0, 19, 145, 0.14);
+            padding: 4px 13px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        /* Hero Banner estilo AFE / index.html */
+        .ct-hero-banner {
+            position: relative;
+            height: 255px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 24px;
+            background-color: var(--bbva-midnight);
+            background-image:
+                linear-gradient(180deg, rgba(7, 14, 70, 0.70) 0%, rgba(0, 19, 145, 0.58) 100%),
+                url('fondo2.jpg');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 4px solid var(--bbva-serene);
+        }
+
+        .ct-hero-title {
+            position: relative;
+            z-index: 2;
+            color: #F7F8F8;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+            line-height: 1.02;
+            margin: 0;
+            text-shadow: 0 4px 18px rgba(7, 14, 70, 0.5);
+        }
+
+        .ct-hero-sub {
+            position: relative;
+            z-index: 2;
+            color: #CFE6FF;
+            font-size: 0.96rem;
+            margin: 14px 0 0;
+            max-width: 680px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* Barra superior pegajosa de navegación por píldoras */
+        .ct-top-pillbar {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--bbva-gray-100);
+            padding: 13px 0;
+            box-shadow: 0 4px 20px rgba(7, 14, 70, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .ct-top-pillbar-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ==========================================================================
+           LAYOUT DE 2 COLUMNAS CON VIDEO GRANDE (IZQUIERDA Y DERECHA)
+           ========================================================================== */
+        .ct-split-layout {
+            display: grid;
+            grid-template-columns: 0.92fr 1.08fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .ct-split-layout-video-right {
+            display: grid;
+            grid-template-columns: 1.08fr 0.92fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .ct-split-video-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 18px;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .ct-split-video-stage:hover {
+            transform: scale(1.015);
+        }
+
+        .ct-split-video {
+            width: 100%;
+            max-width: 480px;
+            height: auto;
+            display: block;
+            border: none;
+            outline: none;
+            border-radius: 14px;
+            background-color: #FFFFFF;
+            mix-blend-mode: multiply;
+            filter: brightness(1.08) contrast(1.06) saturate(1.04);
+            -webkit-mask-image: radial-gradient(ellipse 84% 82% at 50% 50%, #000 65%, transparent 99%);
+            mask-image: radial-gradient(ellipse 84% 82% at 50% 50%, #000 65%, transparent 99%);
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           BOTONES PÍLDORA EJECUTIVOS CON DESTELLO SUTIL (SHINE)
+           ========================================================================== */
+        .ct-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.26s ease, box-shadow 0.26s ease, background-color 0.26s ease, border-color 0.26s ease;
+            z-index: 1;
+        }
+
+        .ct-btn-auto { width: auto; }
+
+        .ct-btn-royal {
+            background-color: var(--bbva-electric);
+            color: #F7F8F8;
+            border: 1px solid var(--bbva-electric);
+            box-shadow: 0 4px 12px rgba(0, 19, 145, 0.18);
+        }
+
+        .ct-btn-royal:hover:not(:disabled) {
+            background-color: var(--bbva-midnight);
+            border-color: var(--bbva-midnight);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(7, 14, 70, 0.28);
+        }
+
+        .ct-btn-soft {
+            background-color: #F4F8FD;
+            color: var(--bbva-electric);
+            border: 1.5px solid #B8D8FA;
+        }
+
+        .ct-btn-soft:hover:not(:disabled) {
+            background-color: var(--bbva-electric);
+            color: #FFFFFF;
+            border-color: var(--bbva-electric);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 19, 145, 0.18);
+        }
+
+        .ct-btn-emerald {
+            background: linear-gradient(135deg, #0F5C6E 0%, #0A4352 100%);
+            color: #FFFFFF;
+            border: 1px solid #0F5C6E;
+            box-shadow: 0 4px 12px rgba(15, 92, 110, 0.20);
+        }
+
+        .ct-btn-emerald:hover:not(:disabled) {
+            background: linear-gradient(135deg, #070E46 0%, #0F5C6E 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 92, 110, 0.30);
+        }
+
+        .ct-btn-glow-special {
+            background: linear-gradient(135deg, var(--bbva-electric) 0%, var(--bbva-midnight) 100%);
+            color: #F7F8F8 !important;
+            border: 1.5px solid var(--bbva-accent-aqua);
+            box-shadow: 0 0 16px rgba(140, 232, 234, 0.55), 0 4px 14px rgba(0, 19, 145, 0.30);
+            animation: ct-glow-pulse 2.8s infinite ease-in-out;
+        }
+
+        .ct-btn-glow-special i {
+            color: var(--bbva-accent-yellow);
+        }
+
+        .ct-btn-glow-special:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.015);
+            border-color: var(--bbva-accent-yellow);
+            box-shadow: 0 0 24px rgba(255, 231, 97, 0.75), 0 8px 22px rgba(0, 19, 145, 0.45);
+        }
+
+        .ct-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        @keyframes ct-glow-pulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(140, 232, 234, 0.45), 0 4px 12px rgba(0, 19, 145, 0.25); }
+            50% { box-shadow: 0 0 22px rgba(133, 200, 255, 0.80), 0 6px 18px rgba(0, 19, 145, 0.42); }
+        }
+
+        .ct-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -130%;
+            width: 65%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+            transform: skewX(-25deg);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ct-btn:hover:not(:disabled)::before {
+            animation: ct-shine-hover 0.75s ease-in-out;
+        }
+
+        @keyframes ct-shine-hover {
+            0% { left: -130%; }
+            100% { left: 160%; }
+        }
+
+        /* ==========================================================================
+           TARJETAS EJECUTIVAS E ILUSTRACIONES SPHERICA GLASS
+           ========================================================================== */
+        .ct-afe-card {
+            background: var(--bbva-white);
+            border: 1px solid var(--bbva-gray-100);
+            border-top: 5px solid var(--bbva-electric);
+            border-radius: 20px;
+            padding: 34px 36px;
+            box-shadow: 0 12px 34px rgba(7, 14, 70, 0.06);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .ct-card-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ct-card-illus {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            flex-shrink: 0;
+            filter: drop-shadow(0 6px 12px rgba(7, 14, 70, 0.14));
+            transition: transform 0.35s ease;
+        }
+
+        .ct-afe-card:hover .ct-card-illus {
+            transform: scale(1.06) translateY(-2px);
+        }
+
+        /* ==========================================================================
+           CAMPOS DE CAPTURA CON ÍCONO Y ESTILO CORPORATIVO LIMPIO
+           ========================================================================== */
+        .ct-field-label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--bbva-midnight);
+            margin-bottom: 6px;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: var(--bbva-electric);
+            font-size: 0.88rem;
+            pointer-events: none;
+            z-index: 10;
+            width: 18px;
+            text-align: center;
+            opacity: 0.82;
+        }
+
+        .input-user-icon {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #070E46;
+            background-color: #F7FAFF;
+            border: 1.5px solid #C4D7F2;
+            border-radius: 12px;
+            font-variant-numeric: tabular-nums;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-user-icon:focus {
+            background-color: #FFFFFF;
+            border-color: #001391;
+            box-shadow: 0 0 0 3px rgba(0, 19, 145, 0.12);
+        }
+
+        .input-user-icon::placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        /* Tarjeta Checklist Normativo */
+        .ct-checklist-box {
+            background: linear-gradient(180deg, #F8FBFF 0%, #EEF5FF 100%);
+            border: 1px solid #C9DDF8;
+            border-left: 5px solid var(--bbva-electric);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+        }
+
+        .ct-checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            font-size: 0.8rem;
+            color: var(--bbva-midnight);
+            padding: 4px 0;
+            line-height: 1.45;
+        }
+
+        /* Dropzone Ejecutiva Homologada con AFE */
+        .ct-upload-dropzone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 28px 24px;
+            background: linear-gradient(180deg, #F8FBFF 0%, #F0F6FF 100%);
+            border: 2px dashed #85C8FF;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .ct-upload-dropzone:hover,
+        .ct-dropzone-active {
+            background: #FFFFFF;
+            border-color: var(--bbva-electric);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(0, 19, 145, 0.10);
+        }
+
+        .ct-upload-icon-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            color: var(--bbva-electric);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 16px rgba(0, 19, 145, 0.12);
+            transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .ct-upload-dropzone:hover .ct-upload-icon-circle {
+            background: var(--bbva-electric);
+            color: #FFFFFF;
+            transform: scale(1.08);
+        }
+
+        /* Ítems de archivos cargados */
+        .ct-file-chip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #F8FAFC;
+            border: 1px solid #D5DFEC;
+            border-left: 4px solid #0F5C6E;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--bbva-midnight);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .ct-file-chip:hover {
+            background: #F0F6FF;
+            transform: translateX(2px);
+        }
+
+        /* Animación Scroll Reveal idéntica a index y AFE */
+        .ct-reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ct-reveal.ct-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1024px) {
+            .ct-split-layout,
+            .ct-split-layout-video-right {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .ct-afe-card {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ct-master-wrap">
+
+    <!-- ================= HERO BANNER CORPORATIVO ================= -->
+    <header class="ct-hero-banner">
+        <h1 class="ct-hero-title ct-serif-large">Solicitud de Crédito y<br>Proyecciones Financieras</h1>
+        <p class="ct-hero-sub">Integración de condiciones financieras, expediente documental y resguardo automatizado en Google Drive</p>
+    </header>
+
+    <!-- ================= BARRA SUPERIOR DE NAVEGACIÓN RÁPIDA ================= -->
+    <nav class="ct-top-pillbar">
+        <div class="ct-container ct-top-pillbar-inner">
+            <a href="index.html" class="ct-btn ct-btn-soft ct-btn-auto">
+                <i class="fa-solid fa-arrow-left"></i> Portal Principal
+            </a>
+        </div>
+    </nav>
+
+    <!-- EL FORMULARIO ENVUELVE LAS BANDAS PARA CONSERVAR ÍNTEGRA TODA LA VALIDACIÓN Y ENVÍO -->
+    <form id="formularioCredito">
+
+        <!-- ==========================================================================
+             BANDA 1 (FONDO BLANCO): DATOS DEL BANQUERO, CLIENTE Y CONTACTO + VIDEO A LA IZQUIERDA
+             ========================================================================== -->
+        <section id="paso-01-ejecutivo" class="ct-band-white">
+            <div class="ct-container">
+                <div class="ct-split-layout ct-reveal">
+
+                    <!-- COLUMNA IZQUIERDA: VIDEO CORPORATIVO GRANDE -->
+                    <div class="ct-split-video-stage">
+                        <video class="ct-split-video" id="video-solicitud-identificacion" src="crear.mp4" autoplay loop muted playsinline></video>
+                    </div>
+
+                    <!-- COLUMNA DERECHA: DATOS DE IDENTIFICACIÓN -->
+                    <div>
+                        <div class="ct-card-header-flex mb-3">
+                            <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/checkbook-glass.png" alt="Datos del Ejecutivo y Empresa" class="ct-card-illus">
+                            <div>
+                                <span class="ct-step-eyebrow mb-1">
+                                    <i class="fa-regular fa-id-card"></i> Paso 01 • Identificación de la Operación
+                                </span>
+                                <h2 class="ct-serif-electric text-2xl md:text-3xl m-0">
+                                    Datos del Banquero, Empresa y Contacto
+                                </h2>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 m-0 mb-5">
+                            Complete los datos generales del ejecutivo responsable y la razón social del cliente acreditado para organizar automáticamente su carpeta de proyección y enviar notificaciones de seguimiento.
+                        </p>
+
+                        <div class="bg-slate-50/85 border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4">
+                            <div>
+                                <label for="nombreBanquero" class="ct-field-label">Nombre del Banquero / Ejecutivo (*)</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                    <input type="text" id="nombreBanquero" class="input-user-icon" required placeholder="Ej. Carlos Méndez">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="nombreCliente" class="ct-field-label">Empresa / Razón Social o No. Cliente (*)</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fa-solid fa-building"></i>
+                                    <input type="text" id="nombreCliente" class="input-user-icon" required placeholder="Ej. GRUPO INDUSTRIAL VIDA SA DE CV">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="email" class="ct-field-label">Correo Electrónico de Notificación (*)</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fa-solid fa-at"></i>
+                                    <input type="email" id="email" class="input-user-icon" required placeholder="correo@empresa.com">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             BANDA 2 (FONDO ARENA SUAVE): ESTRUCTURA Y CONDICIONES DE LA SOLICITUD
+             ========================================================================== -->
+        <section id="paso-02-condiciones" class="ct-band-sand">
+            <div class="ct-container">
+                <div class="ct-afe-card ct-reveal">
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-5 mb-6 gap-4">
+                        <div class="ct-card-header-flex">
+                            <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/bankbook-glass.png" alt="Condiciones de la Solicitud" class="ct-card-illus">
+                            <div>
+                                <span class="ct-step-eyebrow mb-1">
+                                    <i class="fa-solid fa-coins"></i> Paso 02 • Estructura Financiera
+                                </span>
+                                <h2 class="ct-serif-electric text-xl md:text-2xl m-0">
+                                    Condiciones de la Solicitud de Crédito
+                                </h2>
+                                <p class="text-xs text-slate-500 mt-1 m-0">
+                                    Especifique el esquema financiero, monto, plazo, esquema de amortización, tasa y comisiones aplicables.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div>
+                            <label for="tipoCredito" class="ct-field-label">Tipo de Crédito</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-file-contract"></i>
+                                <select id="tipoCredito" class="input-user-icon" required>
+                                    <option value="Largo Plazo">Largo Plazo</option>
+                                    <option value="Simple">Simple</option>
+                                    <option value="Crediflex">Crediflex</option>
+                                    <option value="Arrendamiento">Arrendamiento</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="monto" class="ct-field-label">Monto (en miles)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-dollar-sign"></i>
+                                <input type="number" id="monto" class="input-user-icon" value="10000" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="moneda" class="ct-field-label">Moneda</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                                <select id="moneda" class="input-user-icon" required>
+                                    <option value="Pesos">Pesos (MXN)</option>
+                                    <option value="Dólares">Dólares (USD)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="destino" class="ct-field-label">Destino</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-bullseye"></i>
+                                <select id="destino" class="input-user-icon" required>
+                                    <option value="Compra de pasivos">Compra de pasivos</option>
+                                    <option value="Capital de trabajo permanente">Capital de trabajo permanente</option>
+                                    <option value="Inversión en activos">Inversión en activos</option>
+                                    <option value="Refinanciamiento">Refinanciamiento</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="plazo" class="ct-field-label">Plazo (Años)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-regular fa-calendar-check"></i>
+                                <input type="number" id="plazo" class="input-user-icon" value="5" min="1" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="gracia" class="ct-field-label">Periodo de Gracia</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-hourglass-half"></i>
+                                <select id="gracia" class="input-user-icon" required>
+                                    <option value="NA">NA (Sin gracia)</option>
+                                    <option value="6 meses">6 meses</option>
+                                    <option value="12 meses">12 meses</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="amortizaciones" class="ct-field-label">Plazo de Amortizaciones</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                                <select id="amortizaciones" class="input-user-icon" required>
+                                    <option value="Mensual">Mensual</option>
+                                    <option value="Trimestral">Trimestral</option>
+                                    <option value="Semestral">Semestral</option>
+                                    <option value="Anual">Anual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="formaAmortizacion" class="ct-field-label">Forma de Amortización</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <select id="formaAmortizacion" class="input-user-icon" required>
+                                    <option value="Lineal">Lineal</option>
+                                    <option value="Creciente">Creciente</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="tasaInteres" class="ct-field-label">Tasa de Interés Anual (%)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-percent"></i>
+                                <input type="number" id="tasaInteres" class="input-user-icon" step="0.1" value="12" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="comisionApertura" class="ct-field-label">Comisión por Apertura (%)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-hand-holding-dollar"></i>
+                                <input type="number" id="comisionApertura" class="input-user-icon" step="0.1" value="1" required>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label for="comisionAdmin" class="ct-field-label">Comisión por Admin. (%)</label>
+                            <div class="input-icon-wrapper">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <input type="number" id="comisionAdmin" class="input-user-icon" step="0.1" value="1" required>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             BANDA 3 (FONDO BLANCO): DOCUMENTACIÓN REQUERIDA + VIDEO A LA DERECHA + ENVÍO
+             ========================================================================== -->
+        <section id="paso-03-documentos" class="ct-band-white">
+            <div class="ct-container">
+                <div class="ct-afe-card ct-reveal" style="border-top-color: #0F5C6E;">
+                    <div class="ct-split-layout-video-right">
+
+                        <!-- COLUMNA IZQUIERDA: CHECKLIST, ZONA DRAG & DROP Y ENVÍO -->
+                        <div>
+                            <div class="ct-card-header-flex mb-4">
+                                <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/analyze-doc-glass.png" alt="Documentación Requerida" class="ct-card-illus">
+                                <div>
+                                    <span class="ct-step-eyebrow mb-1" style="background:#E6F6F4; color:#0F5C6E; border-color:rgba(15,92,110,0.2);">
+                                        <i class="fa-solid fa-folder-open"></i> Paso 03 • Expediente y Resguardo en Drive
+                                    </span>
+                                    <h2 class="ct-serif-electric text-xl md:text-2xl m-0">
+                                        Documentación Requerida (*)
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <!-- Guía / Checklist Normativo -->
+                            <div class="ct-checklist-box">
+                                <p class="text-xs font-extrabold text-bbva-electric uppercase tracking-wider mb-2.5 flex items-center gap-2">
+                                    <i class="fa-solid fa-clipboard-check"></i> Información básica requerida para la elaboración de proyecciones:
+                                </p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
+                                    <div class="ct-checklist-item">
+                                        <i class="fa-solid fa-circle-check text-[#0F5C6E] mt-1 text-xs"></i>
+                                        <span><strong>EEFF:</strong> 2 ejercicios y un parcial con vigencia máxima de 6 meses.</span>
+                                    </div>
+                                    <div class="ct-checklist-item">
+                                        <i class="fa-solid fa-circle-check text-[#0F5C6E] mt-1 text-xs"></i>
+                                        <span><strong>Vaciado financiero:</strong> AFE o Creditlens.</span>
+                                    </div>
+                                    <div class="ct-checklist-item">
+                                        <i class="fa-solid fa-circle-check text-[#0F5C6E] mt-1 text-xs"></i>
+                                        <span><strong>Proyecciones base:</strong> Con premisas (entregadas por el cliente).</span>
+                                    </div>
+                                    <div class="ct-checklist-item">
+                                        <i class="fa-solid fa-circle-check text-[#0F5C6E] mt-1 text-xs"></i>
+                                        <span><strong>Cuadro de pasivos bancarios.</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-slate-600 mb-3">
+                                <i class="fa-brands fa-google-drive text-bbva-electric mr-1"></i>
+                                Es obligatorio subir los archivos. Se archivarán automáticamente en Google Drive dentro de <strong>[Banquero] &rarr; [Empresa_ProyeccionN]</strong>.
+                            </p>
+
+                            <!-- Zona Drag & Drop Ejecutiva -->
+                            <div class="ct-upload-dropzone mb-4" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                                <div class="ct-upload-icon-circle">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <p class="text-sm font-bold text-bbva-navy m-0">Haz clic aquí o arrastra tus archivos del expediente</p>
+                                <p class="text-xs text-slate-500 mt-1 m-0">Soporta PDF, Word, Excel e Imágenes (carga múltiple habilitada)</p>
+                                <input type="file" id="fileInput" multiple class="hidden">
+                            </div>
+
+                            <!-- Lista dinámica de documentos seleccionados -->
+                            <div id="uploadedFilesList" class="mb-6 space-y-2">
+                                <div class="px-3.5 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-semibold flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-exclamation text-amber-600"></i>
+                                    <span>Aún no has añadido documentos obligatorios al expediente.</span>
+                                </div>
+                            </div>
+
+                            <!-- Botón Principal de Envío estilo Glow Institucional -->
+                            <button type="submit" id="btnEnviar" class="ct-btn ct-btn-glow-special w-full py-4 text-sm uppercase tracking-wider">
+                                <i class="fa-solid fa-paper-plane"></i> Procesar Solicitud y Guardar Documentos
+                            </button>
+                        </div>
+
+                        <!-- COLUMNA DERECHA: SEGUNDO VIDEO CORPORATIVO GRANDE -->
+                        <div class="ct-split-video-stage">
+                            <video class="ct-split-video" id="video-solicitud-documentos" src="cargar.mp4" autoplay loop muted playsinline></video>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </form>
+
+</div><!-- /.ct-master-wrap -->
+
+<script>
+    // 1er link: Web App de Google Drive (subida y carpetas incrementales)
+    const SCRIPT_DRIVE_URL = "https://script.google.com/macros/s/AKfycbwsqHC5yrgMwWNB2I5t24Z7-b6AzTLGaJYtK0lLs_Ru2zF_VKbLYru3GlvsbHhWn0IRqw/exec";
+    
+    // 2do link: Web App de Google Sheets (respuestas y correos con link a Drive)
+    const SCRIPT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzsLN-PKIB9RjdwM8A4t7KuWJcDPyrjTp_64AZbIBNRQ0ndcyZAGc73xBE34idKQnOX/exec";
+
+    let archivosSeleccionados = [];
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+
+    function actualizarListaArchivos() {
+        const listContainer = document.getElementById('uploadedFilesList');
+        listContainer.innerHTML = '';
+
+        if (archivosSeleccionados.length === 0) {
+            listContainer.innerHTML = `
+                <div class="px-3.5 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-amber-600"></i>
+                    <span>Aún no has añadido documentos obligatorios al expediente.</span>
+                </div>`;
+            return;
+        }
+
+        archivosSeleccionados.forEach((file, index) => {
+            const div = document.createElement('div');
+            div.className = 'ct-file-chip';
+            div.innerHTML = `
+                <span class="truncate pr-2">
+                    <i class="fa-solid fa-paperclip text-[#0F5C6E] mr-2"></i>
+                    <strong>${file.name}</strong>
+                    <span class="text-slate-500 ml-1">(${(file.size / 1024).toFixed(1)} KB)</span>
+                </span>
+                <button type="button" onclick="eliminarArchivo(${index})" class="text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg text-xs px-2.5 py-1 transition shrink-0" title="Quitar archivo">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            `;
+            listContainer.appendChild(div);
+        });
+    }
+
+    function eliminarArchivo(index) {
+        archivosSeleccionados.splice(index, 1);
+        actualizarListaArchivos();
+    }
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length) {
+            archivosSeleccionados = archivosSeleccionados.concat(Array.from(e.target.files));
+            actualizarListaArchivos();
+            fileInput.value = '';
+        }
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('ct-dropzone-active');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('ct-dropzone-active');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('ct-dropzone-active');
+        if (e.dataTransfer.files && e.dataTransfer.files.length) {
+            archivosSeleccionados = archivosSeleccionados.concat(Array.from(e.dataTransfer.files));
+            actualizarListaArchivos();
+        }
+    });
+
+    function leerArchivoBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                resolve(e.target.result.split(',')[1]);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Consulta por JSONP si el cliente ya existe bajo ese banquero en Drive
+    function verificarClienteExistente(banquero, cliente) {
+        return new Promise((resolve) => {
+            const callbackName = 'cb_verif_' + Math.round(Math.random() * 1000000);
+            const script = document.createElement('script');
+            script.id = callbackName;
+            script.src = `${SCRIPT_DRIVE_URL}?action=verificarCliente&nombreBanquero=${encodeURIComponent(banquero)}&nombreCliente=${encodeURIComponent(cliente)}&callback=${callbackName}`;
+
+            const timeout = setTimeout(() => {
+                cleanup();
+                resolve({ exists: false, count: 0, nextNum: 1, folderName: cliente + "_Proyeccion1" });
+            }, 5000);
+
+            function cleanup() {
+                clearTimeout(timeout);
+                delete window[callbackName];
+                const el = document.getElementById(callbackName);
+                if (el) el.remove();
+            }
+
+            window[callbackName] = function(res) {
+                cleanup();
+                resolve(res || { exists: false, count: 0, nextNum: 1, folderName: cliente + "_Proyeccion1" });
+            };
+
+            script.onerror = function() {
+                cleanup();
+                resolve({ exists: false, count: 0, nextNum: 1, folderName: cliente + "_Proyeccion1" });
+            };
+
+            document.body.appendChild(script);
+        });
+    }
+
+    document.getElementById("formularioCredito").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        if (archivosSeleccionados.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Documentos Obligatorios',
+                text: 'Debes añadir al menos un documento antes de enviar la solicitud.',
+                background: '#FFFFFF',
+                color: '#070E46',
+                confirmButtonColor: '#001391'
+            });
+            return;
+        }
+
+        const btn = document.getElementById("btnEnviar");
+        btn.disabled = true;
+        const nombreBanquero = document.getElementById("nombreBanquero").value.trim();
+        const nombreCliente = document.getElementById("nombreCliente").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        let subcarpetaCreadaId = "";
+        let carpetaDriveClienteUrl = "";
+
+        try {
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Verificando historial del cliente en Drive...`;
+
+            // 1. Verificar si ya hay proyecciones previas para este cliente
+            const verifInfo = await verificarClienteExistente(nombreBanquero, nombreCliente);
+            let nombreCarpetaDestino = verifInfo.folderName || (nombreCliente + "_Proyeccion1");
+
+            if (verifInfo && verifInfo.exists) {
+                const resultPregunta = await Swal.fire({
+                    icon: 'question',
+                    title: '¡Cliente Existente!',
+                    html: `
+                        <p style="font-size:0.9rem; color:#334155;">
+                            Se detectó que el cliente <b>"${nombreCliente}"</b> ya cuenta con <b>${verifInfo.count}</b> proyección(es) anterior(es) bajo este banquero.
+                        </p>
+                        <p style="font-size:0.82rem; color:#001391; font-weight:700; margin-top:12px;">
+                            ¿Deseas solicitar una nueva proyección para este cliente?
+                        </p>
+                        <p style="font-size:0.76rem; color:#64748B; margin-top:6px;">
+                            Para evitar mezclar documentos, se creará la carpeta: <b>"${verifInfo.folderName}"</b>.
+                        </p>
+                    `,
+                    background: '#FFFFFF',
+                    color: '#070E46',
+                    showCancelButton: true,
+                    confirmButtonColor: '#001391',
+                    cancelButtonColor: '#64748B',
+                    confirmButtonText: 'Sí, solicitar nueva proyección',
+                    cancelButtonText: 'Cancelar'
+                });
+
+                if (!resultPregunta.isConfirmed) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Procesar Solicitud y Guardar Documentos`;
+                    return;
+                }
+            }
+
+            // 2. Subida de archivos a Drive a la subcarpeta incremental (_ProyeccionN)
+            for (let i = 0; i < archivosSeleccionados.length; i++) {
+                const file = archivosSeleccionados[i];
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Subiendo archivo ${i + 1} de ${archivosSeleccionados.length} a Drive...`;
+                
+                const rawData = await leerArchivoBase64(file);
+                const payload = {
+                    nombreBanquero: nombreBanquero,
+                    nombreCliente: nombreCliente,
+                    targetFolderId: subcarpetaCreadaId,
+                    customFolderName: nombreCarpetaDestino,
+                    fileName: file.name,
+                    mimeType: file.type,
+                    fileData: rawData
+                };
+
+                try {
+                    const respDrive = await fetch(SCRIPT_DRIVE_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(payload)
+                    });
+
+                    const textoResp = await respDrive.text();
+                    try {
+                        const jsonDrive = JSON.parse(textoResp);
+                        if (jsonDrive && jsonDrive.folderId) {
+                            subcarpetaCreadaId = jsonDrive.folderId;
+                        }
+                        if (jsonDrive && jsonDrive.folderUrl) {
+                            carpetaDriveClienteUrl = jsonDrive.folderUrl;
+                        }
+                    } catch (errJson) {
+                        console.warn("Respuesta en texto:", textoResp);
+                    }
+                } catch (eDrive) {
+                    console.warn("Subida a Drive enviada:", eDrive);
+                }
+            }
+
+            // 3. Envío de datos a Google Sheets y notificación por correo con el link
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Registrando en Sheets y notificando por correo...`;
+
+            const datos = {
+                clientNumber: nombreCliente,
+                nombreBanquero: nombreBanquero,
+                nombreCliente: nombreCliente,
+                email: email,
+                folderUrl: carpetaDriveClienteUrl,
+                tipoCredito: document.getElementById("tipoCredito").value,
+                monto: document.getElementById("monto").value,
+                moneda: document.getElementById("moneda").value,
+                destino: document.getElementById("destino").value,
+                plazo: document.getElementById("plazo").value,
+                gracia: document.getElementById("gracia").value,
+                amortizaciones: document.getElementById("amortizaciones").value,
+                formaAmortizacion: document.getElementById("formaAmortizacion").value,
+                tasaInteres: document.getElementById("tasaInteres").value,
+                comisionApertura: document.getElementById("comisionApertura").value,
+                comisionAdmin: document.getElementById("comisionAdmin").value
+            };
+
+            const formData = new URLSearchParams();
+            for (const key in datos) {
+                formData.append(key, datos[key]);
+            }
+
+            try {
+                await fetch(SCRIPT_SHEETS_URL, {
+                    method: "POST",
+                    body: formData,
+                    mode: "no-cors"
+                });
+            } catch(errSheets) {
+                console.warn("Petición a Sheets enviada:", errSheets);
+            }
+
+            // 4. Modal ejecutivo final con el enlace directo a la carpeta en Google Drive
+            const botonCarpetaHTML = carpetaDriveClienteUrl ? `
+                <div style="margin-top:16px; padding:16px; border-radius:14px; background:#F4F8FD; border:1px solid #B8D8FA; text-align:left;">
+                    <p style="font-size:0.78rem; font-weight:700; color:#001391; margin:0 0 6px; display:flex; align-items:center; gap:6px;">
+                        <i class="fa-brands fa-google-drive"></i> Carpeta Asignada (${nombreCarpetaDestino}):
+                    </p>
+                    <p style="font-size:0.74rem; color:#475569; margin:0 0 12px; line-height:1.45;">
+                        Tus documentos han sido archivados. Se envió un correo con este enlace y en este mismo espacio encontrarás tu proyección cuando esté lista.
+                    </p>
+                    <a href="${carpetaDriveClienteUrl}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:9px 18px; border-radius:50px; background:#001391; color:#FFFFFF; font-weight:700; font-size:0.78rem; text-decoration:none;">
+                        <i class="fa-solid fa-folder-open"></i> Abrir Carpeta de la Proyección en Drive
+                    </a>
+                </div>
+            ` : '';
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Operación Exitosa!',
+                html: `
+                    <p style="font-size:0.9rem; color:#334155;">
+                        Solicitud procesada para el cliente <b>${nombreCliente}</b> (${nombreCarpetaDestino}).
+                    </p>
+                    <p style="font-size:0.78rem; color:#0F5C6E; margin-top:8px; font-weight:700;">
+                        <i class="fa-solid fa-envelope-circle-check"></i> Se envió confirmación a <b>${email}</b> y al administrador con el enlace a la carpeta.
+                    </p>
+                    ${botonCarpetaHTML}
+                `,
+                background: '#FFFFFF',
+                color: '#070E46',
+                confirmButtonColor: '#001391',
+                confirmButtonText: 'Aceptar'
+            });
+
+            document.getElementById("formularioCredito").reset();
+            archivosSeleccionados = [];
+            actualizarListaArchivos();
+
+        } catch (err) {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un inconveniente: ' + err.toString(),
+                background: '#FFFFFF',
+                color: '#070E46',
+                confirmButtonColor: '#001391'
+            });
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Procesar Solicitud y Guardar Documentos`;
+        }
+    });
+
+    // Inicialización: Animación Scroll Reveal
+    window.addEventListener('DOMContentLoaded', function() {
+        const reveals = document.querySelectorAll('.ct-reveal');
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('ct-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.08 });
+            reveals.forEach(el => obs.observe(el));
+        } else {
+            reveals.forEach(el => el.classList.add('ct-visible'));
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estructuración de Deuda y Amortización Consolidada Multibanco - Portal Corporativo</title>
+
+    <!-- Tailwind CSS CDN sincronizado con la paleta ejecutiva de Solicitud de Crédito / Portal Principal -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bbva: {
+                            navy: '#070E46',
+                            blue: '#001391',
+                            medium: '#1464A5',
+                            serene: '#85C8FF',
+                            teal: '#0F5C6E',
+                            slate: '#1B365D',
+                            lightBg: '#F4F6F9',
+                            cardBg: '#FFFFFF',
+                            calcBg: '#EBF1F8',
+                            border: '#D5DFEC'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 para alertas ejecutivas -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- ExcelJS para exportación nativa con formato financiero -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           SISTEMA DE DISEÑO EJECUTIVO HOMOLOGADO CON SOLICITUD DE CRÉDITO (PAGINA_TER)
+           ========================================================================== */
+        .ct-master-wrap {
+            --bbva-sand: #F4F6F9;
+            --bbva-serene: #85C8FF;
+            --bbva-electric: #001391;
+            --bbva-midnight: #070E46;
+            --bbva-white: #FFFFFF;
+
+            --ct-slate-teal: #0F5C6E;
+            --ct-indigo-slate: #1B365D;
+            --ct-medium-blue: #1464A5;
+            --ct-amber-corp: #B45309;
+
+            --bbva-gray-100: #E6ECF2;
+            --bbva-gray-200: #D0D9E4;
+            --bbva-gray-600: #4A5568;
+
+            --bbva-accent-yellow: #FFE761;
+            --bbva-accent-aqua: #8CE8EA;
+
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--bbva-midnight);
+            background-color: var(--bbva-sand);
+            line-height: 1.6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F4F6F9;
+            color: #070E46;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .ct-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* Bandas alternadas con respiración visual idénticas a Solicitud de Crédito */
+        .ct-band-white {
+            background-color: var(--bbva-white);
+            padding: 52px 0;
+            border-bottom: 1px solid var(--bbva-gray-100);
+        }
+
+        .ct-band-sand {
+            background-color: var(--bbva-sand);
+            padding: 52px 0;
+            border-bottom: 1px solid var(--bbva-gray-100);
+        }
+
+        /* Tipografía Georgia Institucional */
+        .ct-serif {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            line-height: 1.12;
+            color: var(--bbva-midnight);
+        }
+
+        .ct-serif-electric {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            line-height: 1.12;
+            color: var(--bbva-electric);
+        }
+
+        .ct-serif-large {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            line-height: 0.98;
+        }
+
+        /* Etiqueta de paso ejecutivo */
+        .ct-step-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #EEF4FF;
+            color: var(--bbva-electric);
+            border: 1px solid rgba(0, 19, 145, 0.14);
+            padding: 4px 13px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        /* Hero Banner estilo Solicitud de Crédito / AFE */
+        .ct-hero-banner {
+            position: relative;
+            height: 255px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 24px;
+            background-color: var(--bbva-midnight);
+            background-image:
+                linear-gradient(180deg, rgba(7, 14, 70, 0.72) 0%, rgba(0, 19, 145, 0.60) 100%),
+                url('fondo2.jpg');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 4px solid var(--bbva-serene);
+        }
+
+        .ct-hero-title {
+            position: relative;
+            z-index: 2;
+            color: #F7F8F8;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            font-size: clamp(2.1rem, 4.3vw, 3.5rem);
+            line-height: 1.04;
+            margin: 0;
+            text-shadow: 0 4px 18px rgba(7, 14, 70, 0.5);
+        }
+
+        .ct-hero-sub {
+            position: relative;
+            z-index: 2;
+            color: #CFE6FF;
+            font-size: 0.95rem;
+            margin: 14px 0 0;
+            max-width: 740px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        /* Barra superior pegajosa de navegación y simuladores rápidos */
+        .ct-top-pillbar {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--bbva-gray-100);
+            padding: 13px 0;
+            box-shadow: 0 4px 20px rgba(7, 14, 70, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .ct-top-pillbar-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ==========================================================================
+           LAYOUT DE 2 COLUMNAS CON VIDEO GRANDE (IZQUIERDA Y DERECHA)
+           ========================================================================== */
+        .ct-split-layout {
+            display: grid;
+            grid-template-columns: 0.90fr 1.10fr;
+            gap: 46px;
+            align-items: center;
+        }
+
+        .ct-split-layout-video-right {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 44px;
+            align-items: center;
+        }
+
+        .ct-split-video-stage {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 18px;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .ct-split-video-stage:hover {
+            transform: scale(1.015);
+        }
+
+        .ct-split-video {
+            width: 100%;
+            max-width: 470px;
+            height: auto;
+            display: block;
+            border: none;
+            outline: none;
+            border-radius: 14px;
+            background-color: #FFFFFF;
+            mix-blend-mode: multiply;
+            filter: brightness(1.08) contrast(1.06) saturate(1.04);
+            -webkit-mask-image: radial-gradient(ellipse 84% 82% at 50% 50%, #000 65%, transparent 99%);
+            mask-image: radial-gradient(ellipse 84% 82% at 50% 50%, #000 65%, transparent 99%);
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           BOTONES PÍLDORA EJECUTIVOS CON DESTELLO SUTIL (SHINE)
+           ========================================================================== */
+        .ct-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.80rem;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.26s ease, box-shadow 0.26s ease, background-color 0.26s ease, border-color 0.26s ease;
+            z-index: 1;
+            white-space: nowrap;
+        }
+
+        .ct-btn-auto { width: auto; }
+
+        .ct-btn-royal {
+            background-color: var(--bbva-electric);
+            color: #F7F8F8;
+            border: 1px solid var(--bbva-electric);
+            box-shadow: 0 4px 12px rgba(0, 19, 145, 0.18);
+        }
+
+        .ct-btn-royal:hover:not(:disabled) {
+            background-color: var(--bbva-midnight);
+            border-color: var(--bbva-midnight);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(7, 14, 70, 0.28);
+        }
+
+        .ct-btn-soft {
+            background-color: #F4F8FD;
+            color: var(--bbva-electric);
+            border: 1.5px solid #B8D8FA;
+        }
+
+        .ct-btn-soft:hover:not(:disabled) {
+            background-color: var(--bbva-electric);
+            color: #FFFFFF;
+            border-color: var(--bbva-electric);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(0, 19, 145, 0.18);
+        }
+
+        .ct-btn-emerald {
+            background: linear-gradient(135deg, #0F5C6E 0%, #0A4352 100%);
+            color: #FFFFFF;
+            border: 1px solid #0F5C6E;
+            box-shadow: 0 4px 12px rgba(15, 92, 110, 0.20);
+        }
+
+        .ct-btn-emerald:hover:not(:disabled) {
+            background: linear-gradient(135deg, #070E46 0%, #0F5C6E 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 92, 110, 0.30);
+        }
+
+        .ct-btn-glow-special {
+            background: linear-gradient(135deg, var(--bbva-electric) 0%, var(--bbva-midnight) 100%);
+            color: #F7F8F8 !important;
+            border: 1.5px solid var(--bbva-accent-aqua);
+            box-shadow: 0 0 16px rgba(140, 232, 234, 0.55), 0 4px 14px rgba(0, 19, 145, 0.30);
+            animation: ct-glow-pulse 2.8s infinite ease-in-out;
+        }
+
+        .ct-btn-glow-special i {
+            color: var(--bbva-accent-yellow);
+        }
+
+        .ct-btn-glow-special:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.02);
+            border-color: var(--bbva-accent-yellow);
+            box-shadow: 0 0 24px rgba(255, 231, 97, 0.75), 0 8px 22px rgba(0, 19, 145, 0.45);
+        }
+
+        .ct-btn-glow-teal {
+            background: linear-gradient(135deg, #0F5C6E 0%, #070E46 100%);
+            color: #F7F8F8 !important;
+            border: 1.5px solid var(--bbva-accent-aqua);
+            box-shadow: 0 0 16px rgba(140, 232, 234, 0.50), 0 4px 14px rgba(15, 92, 110, 0.32);
+            animation: ct-glow-pulse 2.8s infinite ease-in-out;
+        }
+
+        .ct-btn-glow-teal i {
+            color: var(--bbva-accent-yellow);
+        }
+
+        .ct-btn-glow-teal:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.02);
+            border-color: var(--bbva-accent-yellow);
+            box-shadow: 0 0 24px rgba(255, 231, 97, 0.75), 0 8px 22px rgba(15, 92, 110, 0.45);
+        }
+
+        /* Selector Ejecutivo de Pestañas para el Bloque Unificado de Resultados */
+        .ct-results-switcher {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #EEF3FA;
+            padding: 7px;
+            border-radius: 16px;
+            border: 1.5px solid #D5E2F2;
+        }
+
+        .ct-results-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 22px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #475569;
+            background: transparent;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .ct-results-tab:hover {
+            color: var(--bbva-midnight);
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .ct-results-tab.active {
+            background: linear-gradient(135deg, var(--bbva-electric) 0%, var(--bbva-midnight) 100%);
+            color: #FFFFFF;
+            border-color: var(--bbva-serene);
+            box-shadow: 0 6px 18px rgba(0, 19, 145, 0.22);
+        }
+
+        .ct-results-tab.active i {
+            color: var(--bbva-accent-yellow);
+        }
+
+        .ct-anim-pane {
+            animation: ctFadeSlideIn 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes ctFadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ct-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @keyframes ct-glow-pulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(140, 232, 234, 0.45), 0 4px 12px rgba(0, 19, 145, 0.25); }
+            50% { box-shadow: 0 0 22px rgba(133, 200, 255, 0.80), 0 6px 18px rgba(0, 19, 145, 0.42); }
+        }
+
+        .ct-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -130%;
+            width: 65%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+            transform: skewX(-25deg);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ct-btn:hover:not(:disabled)::before {
+            animation: ct-shine-hover 0.75s ease-in-out;
+        }
+
+        @keyframes ct-shine-hover {
+            0% { left: -130%; }
+            100% { left: 160%; }
+        }
+
+        /* ==========================================================================
+           TARJETAS EJECUTIVAS, KPIS E ILUSTRACIONES SPHERICA GLASS
+           ========================================================================== */
+        .ct-afe-card {
+            background: var(--bbva-white);
+            border: 1px solid var(--bbva-gray-100);
+            border-top: 5px solid var(--bbva-electric);
+            border-radius: 20px;
+            padding: 34px 36px;
+            box-shadow: 0 12px 34px rgba(7, 14, 70, 0.06);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .ct-card-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ct-card-illus {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            flex-shrink: 0;
+            filter: drop-shadow(0 6px 12px rgba(7, 14, 70, 0.14));
+            transition: transform 0.35s ease;
+        }
+
+        .ct-afe-card:hover .ct-card-illus {
+            transform: scale(1.06) translateY(-2px);
+        }
+
+        /* Tarjetas KPI Consolidadas en Estilo Claro Corporativo */
+        .ct-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .ct-kpi-card {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 100%);
+            border: 1.5px solid #DCE5F0;
+            border-left: 5px solid var(--bbva-electric);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 6px 18px rgba(7, 14, 70, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .ct-kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 26px rgba(0, 19, 145, 0.09);
+        }
+
+        .ct-kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .ct-kpi-label {
+            font-size: 0.71rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #5A677D;
+        }
+
+        .ct-kpi-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: #EEF4FF;
+            color: var(--bbva-electric);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .ct-kpi-value {
+            font-size: 1.38rem;
+            font-weight: 800;
+            color: var(--bbva-midnight);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        .ct-kpi-sub {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #4A5568;
+        }
+
+        /* ==========================================================================
+           CAMPOS DE CAPTURA CON ÍCONO Y ESTILO CORPORATIVO LIMPIO
+           ========================================================================== */
+        .ct-field-label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--bbva-midnight);
+            margin-bottom: 6px;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: var(--bbva-electric);
+            font-size: 0.88rem;
+            pointer-events: none;
+            z-index: 10;
+            width: 18px;
+            text-align: center;
+            opacity: 0.82;
+        }
+
+        .input-user-icon {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: #070E46;
+            background-color: #F7FAFF;
+            border: 1.5px solid #C4D7F2;
+            border-radius: 12px;
+            font-variant-numeric: tabular-nums;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-user-plain {
+            width: 100%;
+            padding: 10px 13px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            color: #070E46;
+            background-color: #F7FAFF;
+            border: 1.5px solid #C4D7F2;
+            border-radius: 11px;
+            font-variant-numeric: tabular-nums;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-user-icon:focus,
+        .input-user-plain:focus {
+            background-color: #FFFFFF;
+            border-color: #001391;
+            box-shadow: 0 0 0 3px rgba(0, 19, 145, 0.12);
+        }
+
+        .input-user-icon::placeholder,
+        .input-user-plain::placeholder {
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        /* ==========================================================================
+           BADGES DE BANCOS EN TEMA CLARO CORPORATIVO (ALTA LEGIBILIDAD)
+           ========================================================================== */
+        .badge-bank {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.18rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .badge-bbva { background: #EEF4FF; color: #001391; border: 1px solid #99C2FF; }
+        .badge-santander { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+        .badge-scotia { background: #FFF1F2; color: #BE123C; border: 1px solid #FECDD3; }
+        .badge-bajio { background: #FEFCE8; color: #A16207; border: 1px solid #FDE047; }
+        .badge-banorte { background: #FFF5F5; color: #991B1B; border: 1px solid #FCA5A5; }
+        .badge-otros { background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; }
+
+        /* ==========================================================================
+           TABLAS FINANCIERAS EJECUTIVAS CON ENCABEZADO PEGAJOSO
+           ========================================================================== */
+        .ct-fin-table-wrap {
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid #D8E1EC;
+            box-shadow: 0 4px 16px rgba(7, 14, 70, 0.03);
+            background: #FFFFFF;
+        }
+
+        .table-container-scroll {
+            max-height: 580px;
+            overflow-y: auto;
+            overflow-x: auto;
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid #D8E1EC;
+            background: #FFFFFF;
+        }
+
+        .table-container-scroll::-webkit-scrollbar,
+        .custom-scroll::-webkit-scrollbar { width: 7px; height: 7px; }
+        .table-container-scroll::-webkit-scrollbar-track,
+        .custom-scroll::-webkit-scrollbar-track { background: #F1F5F9; border-radius: 6px; }
+        .table-container-scroll::-webkit-scrollbar-thumb,
+        .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 6px; }
+        .table-container-scroll::-webkit-scrollbar-thumb:hover,
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+        .table-custom {
+            width: 100%;
+            min-width: 1220px;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.78rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .table-custom th {
+            position: sticky;
+            top: 0;
+            background: #070E46;
+            color: #FFFFFF;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 12px 11px;
+            border-bottom: 2px solid #85C8FF;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .table-custom td {
+            padding: 9px 11px;
+            border-bottom: 1px solid #E8EEF5;
+            white-space: nowrap;
+            color: #1E293B;
+            background-color: #FFFFFF;
+            transition: background-color 0.15s ease;
+        }
+
+        .table-custom tbody tr:nth-child(even) td {
+            background-color: #FAFBFD;
+        }
+
+        .table-custom tbody tr:hover td {
+            background-color: #EFF6FF !important;
+        }
+
+        /* Modal Ejecutivo Claro */
+        .modal-overlay {
+            background: rgba(7, 14, 70, 0.72);
+            backdrop-filter: blur(8px);
+        }
+
+        .ct-modal-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #D5DFEC;
+            border-top: 6px solid #001391;
+            box-shadow: 0 25px 55px rgba(7, 14, 70, 0.38);
+            color: #070E46;
+        }
+
+        /* Animación Scroll Reveal */
+        .ct-reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .ct-reveal.ct-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1024px) {
+            .ct-split-layout,
+            .ct-split-layout-video-right {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            .ct-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .ct-top-pillbar-inner {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .ct-kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            .ct-afe-card {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ct-master-wrap">
+
+    <!-- ================= HERO BANNER CORPORATIVO ================= -->
+    <header class="ct-hero-banner">
+        <h1 class="ct-hero-title ct-serif-large">Tablas de Amortización<br>Consolidadas Multibanco</h1>
+        <p class="ct-hero-sub">Estructuración de pasivos financieros, perfil de vencimientos anuales y proyección unificada de pagos mes con mes</p>
+    </header>
+
+    <!-- ================= BARRA SUPERIOR DE SIMULADORES PREVIOS ================= -->
+    <nav class="ct-top-pillbar">
+        <div class="ct-container flex flex-wrap items-center justify-center gap-3">
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600">
+                <i class="fas fa-flask text-bbva-blue"></i> Probar antes de guardar:
+            </span>
+            <a href="AMORTIZACION%20LINEAL.html" target="_blank" rel="noopener" class="ct-btn ct-btn-soft ct-btn-auto">
+                <i class="fas fa-chart-line"></i> Visualizar Supuesto Lineal
+            </a>
+            <a href="AMORTIZACION%20CRECIENTE.html" target="_blank" rel="noopener" class="ct-btn ct-btn-soft ct-btn-auto">
+                <i class="fas fa-layer-group"></i> Visualizar Supuesto Creciente
+            </a>
+        </div>
+    </nav>
+
+    <!-- ==========================================================================
+         BANDA 1 (FONDO BLANCO): BÚSQUEDA POR BANQUERO Y FILTROS + VIDEO A LA IZQUIERDA
+         ========================================================================== -->
+    <section id="seccion-identificacion-cartera" class="ct-band-white">
+        <div class="ct-container">
+            <div class="ct-split-layout ct-reveal">
+
+                <!-- COLUMNA IZQUIERDA: VIDEO CORPORATIVO GRANDE -->
+                <div class="ct-split-video-stage">
+                    <video class="ct-split-video" id="video-amort-busqueda" src="BUSQUEDA.mp4" autoplay loop muted playsinline></video>
+                </div>
+
+                <!-- COLUMNA DERECHA: BÚSQUEDA Y FILTRADO EJECUTIVO -->
+                <div>
+                    <div class="ct-card-header-flex mb-3">
+                        <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/checkbook-glass.png" alt="Banquero y Asignación" class="ct-card-illus">
+                        <div>
+                            <span class="ct-step-eyebrow mb-1">
+                                <i class="fas fa-user-tie"></i> Identificación de Cartera
+                            </span>
+                            <h2 class="ct-serif-electric text-2xl md:text-3xl m-0">
+                                Banquero y Asignación de Créditos
+                            </h2>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600 m-0 mb-5">
+                        Ingrese el nombre del banquero o ejecutivo para recuperar todos sus créditos registrados en Google Sheets, o filtre rápidamente por número de cliente e institución financiera.
+                    </p>
+
+                    <div class="bg-slate-50/85 border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-4">
+                        <div>
+                            <label for="filtroBanquero" class="ct-field-label">Nombre del Banquero / Ejecutivo (*)</label>
+                            <div class="flex flex-col sm:flex-row gap-2.5">
+                                <div class="input-icon-wrapper">
+                                    <i class="fas fa-user-tie"></i>
+                                    <input type="text" id="filtroBanquero" placeholder="Ingrese nombre del banquero..." value=""
+                                           onkeypress="if(event.key==='Enter') buscarCreditosPorBanqueroJS()"
+                                           class="input-user-icon uppercase placeholder:normal-case">
+                                </div>
+                                <button type="button" onclick="buscarCreditosPorBanqueroJS()" class="ct-btn ct-btn-royal px-6 py-3 text-xs shrink-0">
+                                    <i class="fas fa-search"></i> Cargar Créditos
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="filtroNoCliente" class="ct-field-label">Filtrar por No. Cliente o Empresa</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fas fa-building"></i>
+                                    <input type="text" id="filtroNoCliente" placeholder="Ej. 37943836" class="input-user-icon" oninput="filtrarListaCreditosEnMemoria()">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="filtroBanco" class="ct-field-label">Filtrar por Institución Bancaria</label>
+                                <div class="input-icon-wrapper">
+                                    <i class="fas fa-landmark"></i>
+                                    <select id="filtroBanco" class="input-user-icon" onchange="filtrarListaCreditosEnMemoria()">
+                                        <option value="TODOS">TODOS LOS BANCOS</option>
+                                        <option value="BBVA">BBVA</option>
+                                        <option value="SANTANDER">SANTANDER</option>
+                                        <option value="SCOTIABANK">SCOTIABANK</option>
+                                        <option value="BANBAJIO">BANBAJÍO</option>
+                                        <option value="BANORTE">BANORTE</option>
+                                        <option value="OTROS">OTROS</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-200/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <span id="statusCargaCreditos" class="text-xs font-bold text-slate-500">
+                                <i class="fas fa-info-circle text-bbva-blue mr-1"></i> Ingrese el banquero para consultar sus créditos registrados.
+                            </span>
+                            <button type="button" onclick="abrirModalNuevoCredito()" class="ct-btn ct-btn-glow-special px-6 py-3 text-xs uppercase tracking-wider shrink-0">
+                                <i class="fas fa-plus-circle"></i> Nuevo Crédito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         BANDA 2 (FONDO ARENA SUAVE): BANDEJA DE SELECCIÓN DE CRÉDITOS + VIDEO A LA DERECHA
+         ========================================================================== -->
+    <section id="seccion-seleccion-multibanco" class="ct-band-sand">
+        <div class="ct-container">
+            <div class="ct-afe-card ct-reveal">
+                <div class="ct-split-layout-video-right">
+
+                    <!-- COLUMNA IZQUIERDA: BANDEJA DE CRÉDITOS DISPONIBLES PARA CONSOLIDAR -->
+                    <div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200 pb-4 mb-4 gap-3">
+                            <div class="ct-card-header-flex">
+                                <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/bankbook-glass.png" alt="Créditos Disponibles" class="ct-card-illus">
+                                <div>
+                                    <span class="ct-step-eyebrow mb-1">
+                                        <i class="fas fa-list-check"></i> Selección Multibanco
+                                    </span>
+                                    <h2 class="ct-serif-electric text-xl md:text-2xl m-0">
+                                        Créditos Disponibles para Consolidar
+                                    </h2>
+                                    <p class="text-xs text-slate-500 mt-1 m-0">
+                                        Marque o desmarque los financiamientos que integrarán la corrida consolidada en tiempo real.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200 text-xs shrink-0">
+                                <button type="button" onclick="seleccionarTodosCreditos(true)" class="text-bbva-blue hover:underline font-bold">Todos</button>
+                                <span class="text-slate-300">|</span>
+                                <button type="button" onclick="seleccionarTodosCreditos(false)" class="text-slate-600 hover:text-bbva-blue hover:underline font-bold">Ninguno</button>
+                            </div>
+                        </div>
+
+                        <!-- LISTA CON SCROLL EJECUTIVO -->
+                        <div id="contenedorListaCreditos" class="space-y-2.5 max-h-[360px] overflow-y-auto custom-scroll pr-1.5">
+                            <div class="py-10 px-6 text-center bg-slate-50/80 rounded-2xl border border-dashed border-slate-300 text-slate-500 text-xs">
+                                <i class="fas fa-inbox text-2xl text-slate-400 mb-2 block"></i>
+                                Sin créditos cargados en pantalla. Ingrese el nombre del banquero arriba y presione <strong>Cargar Créditos</strong>, o agregue un <strong>Nuevo Crédito</strong>.
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-200 mt-4 flex flex-wrap justify-between items-center gap-3">
+                            <span class="text-xs text-bbva-navy font-extrabold bg-[#EEF4FF] border border-[#C4D7F2] px-3.5 py-1.5 rounded-full" id="labelCreditosSeleccionados">
+                                0 créditos seleccionados
+                            </span>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button type="button" onclick="redirigirCuadrosPasivos()" class="ct-btn ct-btn-glow-teal text-xs py-3 px-6 uppercase tracking-wider">
+                                    <i class="fas fa-table-list"></i> Crear Cuadros de Pasivos
+                                </button>
+                                <button type="button" onclick="consolidarYVerCronograma()" class="ct-btn ct-btn-glow-special text-xs py-3 px-6 uppercase tracking-wider">
+                                    <i class="fas fa-calculator"></i> Consolidar Tablas
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMNA DERECHA: SEGUNDO VIDEO CORPORATIVO GRANDE -->
+                    <div class="ct-split-video-stage">
+                        <video class="ct-split-video" id="video-amort-estructuracion" src="crear.mp4" autoplay loop muted playsinline></video>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         BANDA 3 UNIFICADA (FONDO BLANCO): PESTAÑA 1 (INDICADORES Y TABLAS ANUALES)
+         Y PESTAÑA 2 (CRONOGRAMA MENSUAL CONSOLIDADO) EN UN SOLO BLOQUE LIMPIO
+         ========================================================================== -->
+    <section id="seccion-resultados-consolidados" class="ct-band-white">
+        <div class="ct-container">
+            <div class="ct-afe-card ct-reveal">
+
+                <!-- ENCABEZADO DEL BLOQUE UNIFICADO + PESTAÑAS INTERACTIVAS -->
+                <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-slate-200 pb-5 mb-6 gap-4">
+                    <div class="ct-card-header-flex">
+                        <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/analyze-doc-glass.png" alt="Resultados Consolidados" class="ct-card-illus">
+                        <div>
+                            <span class="ct-step-eyebrow mb-1">
+                                <i class="fas fa-chart-pie"></i> Diagnóstico Ejecutivo y Corrida Financiera
+                            </span>
+                            <h2 class="ct-serif-electric text-xl md:text-2xl m-0">
+                                Análisis de Pasivos y Cronograma Consolidado
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1 m-0">
+                                Alterne entre el resumen ejecutivo de indicadores y la matriz detallada de amortizaciones mes con mes.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- SELECTOR DE DOS PESTAÑAS (DESPLIEGA BAJO DEMANDA SIN SATURAR LA PÁGINA) -->
+                    <div class="ct-results-switcher" role="tablist">
+                        <button type="button" id="btn-tab-indicadores" onclick="cambiarPestanaResultados('indicadores', false)" class="ct-results-tab">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Indicadores y Perfil Anual</span>
+                        </button>
+                        <button type="button" id="btn-tab-cronograma" onclick="cambiarPestanaResultados('cronograma', false)" class="ct-results-tab">
+                            <i class="fas fa-calendar-days"></i>
+                            <span>Cronograma Mensual Consolidado</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ESTADO COMPACTO INICIAL PARA EVITAR SATURACIÓN VISUAL ANTES DE ELEGIR PESTAÑA -->
+                <div id="estado-compacto-resultados" class="py-10 px-6 text-center bg-slate-50/75 rounded-2xl border border-dashed border-slate-300">
+                    <img src="https://assets.bbvaexperience.com/spherica/visual/microillustrations/rule-glass.png" alt="Seleccione una vista" class="w-16 h-16 mx-auto mb-3 object-contain opacity-90">
+                    <h3 class="ct-serif text-lg text-bbva-navy m-0 mb-1">Seleccione la vista que desea desplegar</h3>
+                    <p class="text-xs text-slate-500 max-w-lg mx-auto m-0 mb-4">
+                        Elija arriba <strong>Indicadores y Perfil Anual</strong> para consultar métricas clave, participación por banco y vencimientos anuales, o presione <strong>Consolidar Tablas</strong> para abrir directamente el <strong>Cronograma Mensual Consolidado</strong>.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button type="button" onclick="cambiarPestanaResultados('indicadores', false)" class="ct-btn ct-btn-soft text-xs py-2.5 px-5">
+                            <i class="fas fa-chart-pie"></i> Mostrar Indicadores y Tablas Resumen
+                        </button>
+                        <button type="button" onclick="cambiarPestanaResultados('cronograma', false)" class="ct-btn ct-btn-royal text-xs py-2.5 px-5">
+                            <i class="fas fa-calendar-days"></i> Mostrar Cronograma Mensual
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ==============================================================
+                     PESTAÑA 1: INDICADORES CONSOLIDADOS Y TABLAS DE PERFIL ANUAL
+                     ============================================================== -->
+                <div id="pane-tab-indicadores" class="hidden ct-anim-pane">
+
+                    <!-- 4 TARJETAS DE KPIS CONSOLIDADOS -->
+                    <div class="ct-kpi-grid">
+                        <div class="ct-kpi-card" style="border-left-color: #001391;">
+                            <div class="ct-kpi-top">
+                                <span class="ct-kpi-label">Deuda Total Consolidada</span>
+                                <div class="ct-kpi-icon"><i class="fas fa-sack-dollar"></i></div>
+                            </div>
+                            <div class="ct-kpi-value" id="kpiDeudaTotal">$0.00</div>
+                            <div class="ct-kpi-sub" id="kpiNumBancos">0 Bancos Participantes</div>
+                        </div>
+
+                        <div class="ct-kpi-card" style="border-left-color: #1464A5;">
+                            <div class="ct-kpi-top">
+                                <span class="ct-kpi-label">Deuda con BBVA</span>
+                                <div class="ct-kpi-icon" style="background:#EDF5FC; color:#1464A5;"><i class="fas fa-building-columns"></i></div>
+                            </div>
+                            <div class="ct-kpi-value text-[#001391]" id="kpiDeudaBBVA">$0.00</div>
+                            <div class="ct-kpi-sub" id="kpiPctBBVA">0% del pasivo total</div>
+                        </div>
+
+                        <div class="ct-kpi-card" style="border-left-color: #C2590A;">
+                            <div class="ct-kpi-top">
+                                <span class="ct-kpi-label">Deuda Otros Bancos</span>
+                                <div class="ct-kpi-icon" style="background:#FFF5EB; color:#C2590A;"><i class="fas fa-scale-balanced"></i></div>
+                            </div>
+                            <div class="ct-kpi-value text-[#9A4206]" id="kpiDeudaOtros">$0.00</div>
+                            <div class="ct-kpi-sub" id="kpiPctOtros">0% bancos externos</div>
+                        </div>
+
+                        <div class="ct-kpi-card" style="border-left-color: #0F5C6E;">
+                            <div class="ct-kpi-top">
+                                <span class="ct-kpi-label">Vida Media Consolidada</span>
+                                <div class="ct-kpi-icon" style="background:#E6F6F4; color:#0F5C6E;"><i class="fas fa-hourglass-half"></i></div>
+                            </div>
+                            <div class="ct-kpi-value text-[#0F5C6E]" id="kpiVidaMediaConsolidada">0.00</div>
+                            <div class="ct-kpi-sub">Años ponderados</div>
+                        </div>
+                    </div>
+
+                    <!-- TABLAS DESPLEGADAS DE DISTRIBUCIÓN BANCARIA Y CALENDARIO ANUAL -->
+                    <div class="space-y-6">
+
+                        <!-- DISTRIBUCIÓN POR ENTIDAD BANCARIA -->
+                        <div class="p-5 rounded-2xl bg-[#F8FAFD] border border-[#DCE6F2]">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-3.5 mb-4 border-b border-slate-200 gap-2">
+                                <div>
+                                    <h3 class="ct-serif-electric text-lg m-0">
+                                        Distribución de Saldo y Amortización por Entidad Bancaria
+                                    </h3>
+                                    <p class="text-xs text-slate-500 mt-1 m-0">
+                                        Participación porcentual en el pasivo total e intereses proyectados por institución acreditante.
+                                    </p>
+                                </div>
+                                <span class="text-xs font-bold text-bbva-blue bg-white border border-[#C4D7F2] px-3.5 py-1.5 rounded-full shrink-0" id="labelRangoFechas">
+                                    Vigencia: Sin datos
+                                </span>
+                            </div>
+
+                            <div class="ct-fin-table-wrap">
+                                <table class="w-full text-xs text-left" id="tablaResumenBancos">
+                                    <thead>
+                                        <tr class="bg-[#070E46] text-white font-bold">
+                                            <th class="p-3">BANCO / INSTITUCIÓN</th>
+                                            <th class="p-3 text-center">N° CRÉDITOS</th>
+                                            <th class="p-3 text-right">MONTO TOTAL ($)</th>
+                                            <th class="p-3 text-right">PARTICIPACIÓN (%)</th>
+                                            <th class="p-3 text-right">INTERÉS ESTIMADO ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-200" id="tbodyResumenBancos">
+                                        <tr>
+                                            <td colspan="5" class="p-5 text-center text-slate-400">Ingrese un banquero arriba para desplegar la participación bancaria.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- CALENDARIO DE AMORTIZACIÓN ANUAL CONSOLIDADO -->
+                        <div class="p-5 rounded-2xl bg-[#F8FAFD] border border-[#DCE6F2]">
+                            <div class="pb-3.5 mb-4 border-b border-slate-200">
+                                <h3 class="ct-serif text-lg m-0" style="color: #1464A5;">
+                                    Calendario de Amortización Anual Consolidado
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-1 m-0">
+                                    Amortización acumulada por año calendario con Servicio de la Deuda (Capital Amortizado + Intereses Consolidados) y saldo insoluto al cierre.
+                                </p>
+                            </div>
+
+                            <div class="ct-fin-table-wrap">
+                                <table class="w-full text-xs text-left" id="tablaResumenAnual">
+                                    <thead>
+                                        <tr class="bg-[#1B365D] text-white font-bold">
+                                            <th class="p-3">AÑO CALENDARIO</th>
+                                            <th class="p-3 text-right">AMORTIZACIÓN BBVA ($)</th>
+                                            <th class="p-3 text-right">AMORTIZACIÓN OTROS BANCOS ($)</th>
+                                            <th class="p-3 text-right">TOTAL AMORTIZADO ($)</th>
+                                            <th class="p-3 text-right">INTERESES CONSOLIDADOS ($)</th>
+                                            <th class="p-3 text-right bg-[#001391]">SERVICIO DEUDA ($)</th>
+                                            <th class="p-3 text-right">SALDO VIGENTE AL CIERRE ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-200" id="tbodyResumenAnual">
+                                        <tr>
+                                            <td colspan="7" class="p-5 text-center text-slate-400">Sin datos consolidados aún.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ==============================================================
+                     PESTAÑA 2: CRONOGRAMA MENSUAL CONSOLIDADO DE AMORTIZACIONES
+                     ============================================================== -->
+                <div id="pane-tab-cronograma" class="hidden ct-anim-pane">
+
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 pb-4 border-b border-slate-200">
+                        <div>
+                            <span class="ct-step-eyebrow mb-1" style="background:#E6F6F4; color:#0F5C6E; border-color:rgba(15,92,110,0.2);">
+                                <i class="fas fa-calendar-days"></i> Corrida Financiera Detallada
+                            </span>
+                            <h3 class="ct-serif-electric text-lg md:text-xl m-0">
+                                Cronograma Mensual Consolidado de Amortizaciones (Avance Mes con Mes)
+                            </h3>
+                            <p class="text-xs text-slate-600 mt-1 m-0">
+                                Despliegue continuo mes con mes con cálculo exacto de intereses según los días naturales del mes de corte y aplicación de capital conforme a la periodicidad de cada crédito.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                            <button type="button" onclick="exportarExcelConsolidado()" class="ct-btn ct-btn-emerald text-xs py-2.5 px-5">
+                                <i class="fas fa-file-excel"></i> Exportar Excel (.xlsx)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MATRIZ MENSUAL CON ENCABEZADO FIJO -->
+                    <div class="table-container-scroll">
+                        <table class="table-custom text-center" id="tablaConsolidadaDetalle">
+                            <thead>
+                                <tr>
+                                    <th class="w-12"># Mes</th>
+                                    <th class="w-28">Fecha (Mes/Año)</th>
+                                    <th class="w-16">Año</th>
+                                    <th class="text-right">Saldo Inicial Consolidado</th>
+                                    <th class="text-right" style="color:#85C8FF;">Amort. BBVA ($)</th>
+                                    <th class="text-right" style="color:#FCA5A5;">Amort. Santander ($)</th>
+                                    <th class="text-right" style="color:#F9A8D4;">Amort. Scotiabank ($)</th>
+                                    <th class="text-right" style="color:#FDE047;">Amort. BanBajío ($)</th>
+                                    <th class="text-right" style="color:#DDD6FE;">Amort. Otros ($)</th>
+                                    <th class="text-right" style="color:#8CE8EA;">Total Amortización ($)</th>
+                                    <th class="text-right" style="color:#FFE761;">Total Intereses ($)</th>
+                                    <th class="text-right" style="background:#001391; color:#FFFFFF;">Servicio Deuda ($)</th>
+                                    <th class="text-right">Saldo Final Consolidado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyConsolidado">
+                                <tr>
+                                    <td colspan="13" class="p-8 text-center text-slate-400">
+                                        Ingrese el nombre del banquero arriba y presione "Cargar Créditos" para generar la corrida mensual consolidada.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- BARRA DE TOTALES ACUMULADOS -->
+                    <div class="mt-5 p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-wrap justify-between items-center text-xs gap-3">
+                        <span id="labelTotalMeses" class="font-bold text-slate-600">Meses proyectados: 0</span>
+                        <span id="labelTotalAmortizadoConsolidado" class="text-[#0F5C6E] font-extrabold">Total Capital Amortizado: $0.00</span>
+                        <span id="labelTotalInteresesConsolidado" class="text-[#B45309] font-extrabold">Total Intereses: $0.00</span>
+                        <span id="labelTotalServicioDeudaConsolidado" class="text-[#001391] font-extrabold">Total Servicio Deuda: $0.00</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</div><!-- /.ct-master-wrap -->
+
+<!-- ==========================================================================
+     MODAL EJECUTIVO CLARO PARA REGISTRAR NUEVO CRÉDITO BANCARIO
+     ========================================================================== -->
+<div id="modalNuevoCredito" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4 hidden">
+    <div class="ct-modal-card p-7 max-w-2xl w-full max-h-[92vh] overflow-y-auto custom-scroll">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#EEF4FF] text-[#001391] flex items-center justify-center text-base">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div>
+                    <h3 class="ct-serif-electric text-xl m-0">Registrar Nuevo Crédito Bancario</h3>
+                    <p class="text-xs text-slate-500 m-0 mt-0.5">Capture las condiciones contractuales para integrarlo a la consolidación</p>
+                </div>
+            </div>
+            <button type="button" onclick="cerrarModalNuevoCredito()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-red-600 text-slate-600 hover:text-white transition flex items-center justify-center">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+        </div>
+
+        <form id="formNuevoCredito" onsubmit="guardarCreditoModal(event)" class="space-y-4 text-xs">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="ct-field-label" for="m_banquero">Nombre del Banquero / Ejecutivo (*)</label>
+                    <input type="text" id="m_banquero" required class="input-user-plain uppercase placeholder:normal-case" placeholder="Ej. CARLOS MENDEZ">
+                </div>
+                <div>
+                    <label class="ct-field-label" for="m_banco">Institución Bancaria (*)</label>
+                    <select id="m_banco" class="input-user-plain font-bold" required>
+                        <option value="BBVA">BBVA</option>
+                        <option value="SANTANDER">SANTANDER</option>
+                        <option value="SCOTIABANK">SCOTIABANK</option>
+                        <option value="BANBAJIO">BANBAJÍO</option>
+                        <option value="BANORTE">BANORTE</option>
+                        <option value="HSBC">HSBC</option>
+                        <option value="INBURSA">INBURSA</option>
+                        <option value="CITIBANAMEX">CITIBANAMEX</option>
+                        <option value="OTROS">OTROS BANCOS</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="ct-field-label" for="m_noCliente">No. Cliente / Código (*)</label>
+                    <input type="text" id="m_noCliente" required class="input-user-plain" placeholder="Ej. 37943836">
+                </div>
+                <div>
+                    <label class="ct-field-label" for="m_empresa">Razón Social / Empresa (*)</label>
+                    <input type="text" id="m_empresa" required class="input-user-plain uppercase placeholder:normal-case" placeholder="Ej. GRUPO INDUSTRIAL VIDA SA DE CV">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 bg-[#F4F8FD] p-4 rounded-2xl border border-[#D5E4F7]">
+                <div class="flex flex-col justify-between">
+                    <label class="ct-field-label" for="m_monto">Monto del Crédito ($) (*)</label>
+                    <input type="number" step="0.01" id="m_monto" required class="input-user-plain font-extrabold text-[#001391] bg-white" placeholder="200000">
+                </div>
+                <div class="flex flex-col justify-between">
+                    <label class="ct-field-label" for="m_fechaInicio">Fecha de Disposición (*)</label>
+                    <input type="date" id="m_fechaInicio" required class="input-user-plain bg-white">
+                </div>
+                <div class="flex flex-col justify-between">
+                    <label class="ct-field-label" for="m_tipoAmort">Tipo de Amortización (*)</label>
+                    <select id="m_tipoAmort" class="input-user-plain font-bold bg-white" onchange="toggleEsquemaCrecienteModal()">
+                        <option value="LINEAL">LINEAL (Igual capital)</option>
+                        <option value="CRECIENTE">CRECIENTE (Porcentajes anuales)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- RECUADROS ALINEADOS EN LA MISMA BASE HORIZONTAL -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 items-end">
+                <div class="flex flex-col justify-end h-full">
+                    <label class="ct-field-label leading-tight" for="m_plazoAnos">Plazo (Años) (*)</label>
+                    <input type="number" step="0.5" min="0.5" max="30" id="m_plazoAnos" value="5" required class="input-user-plain" oninput="actualizarCamposCrecienteModal()">
+                </div>
+                <div class="flex flex-col justify-end h-full">
+                    <label class="ct-field-label leading-tight" for="m_periodoMeses" title="Cada cuántos meses amortiza capital (1=Mensual, 3=Trimestral, 6=Semestral)">Plazo Amort. (Meses)</label>
+                    <input type="number" step="1" min="1" max="12" id="m_periodoMeses" value="1" class="input-user-plain">
+                </div>
+                <div class="flex flex-col justify-end h-full">
+                    <label class="ct-field-label leading-tight text-[#001391]" for="m_pagoInteresesMeses" title="Cada cuántos meses paga intereses (Predeterminado: 1 = mes con mes)">Pago Int. (Meses)</label>
+                    <input type="number" step="1" min="1" max="12" id="m_pagoInteresesMeses" value="1" class="input-user-plain font-extrabold text-[#001391]">
+                </div>
+                <div class="flex flex-col justify-end h-full">
+                    <label class="ct-field-label leading-tight" for="m_graciaMeses">Gracia (Meses)</label>
+                    <input type="number" step="1" min="0" id="m_graciaMeses" value="12" class="input-user-plain">
+                </div>
+                <div class="flex flex-col justify-end h-full">
+                    <label class="ct-field-label leading-tight" for="m_balloonPct">Balloon (%)</label>
+                    <input type="number" step="0.1" id="m_balloonPct" value="0" oninput="calcularSumaModal()" class="input-user-plain">
+                </div>
+            </div>
+
+            <div>
+                <label class="ct-field-label" for="m_tasaAnual">Tasa de Interés Anual (%) (*)</label>
+                <input type="number" step="0.01" id="m_tasaAnual" value="10.5" required class="input-user-plain font-extrabold text-[#B45309]">
+            </div>
+
+            <!-- SECCIÓN DINÁMICA DE PORCENTAJES SI ES CRECIENTE -->
+            <div id="seccionCrecienteModal" class="hidden border-t border-slate-200 pt-4">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-extrabold text-[#001391]">Porcentajes Anuales de Amortización</span>
+                    <span id="badgeSumaModal" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                        Suma: 0%
+                    </span>
+                </div>
+                <p class="text-[11px] text-slate-500 mb-3">La suma de los porcentajes anuales más el Balloon debe ser exactamente 100%.</p>
+                <div id="contenedorInputsCrecienteModal" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-36 overflow-y-auto custom-scroll pr-1">
+                    <!-- Inputs dinámicos de porcentajes -->
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2.5 pt-4 border-t border-slate-200">
+                <button type="button" onclick="cerrarModalNuevoCredito()" class="ct-btn ct-btn-soft text-xs py-2.5 px-5">
+                    Cancelar
+                </button>
+                <button type="submit" id="btnGuardarModal" class="ct-btn ct-btn-royal text-xs py-2.5 px-6">
+                    <i class="fas fa-save"></i> Guardar Crédito
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==========================================================================
+     LÓGICA DE NEGOCIO, CONSOLIDACIÓN MULTIBANCO Y EXPORTACIÓN EXCELJS
+     ========================================================================== -->
+<script>
+    /**
+     * URL DEL WEB APP DE GOOGLE APPS SCRIPT
+     */
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz-HiAyPAKVo6vgcI-ktfmRKd02UEBedCeegaCHeaBd-2sRuVgkS3xiDpWauTGATLvFog/exec";
+
+    // DÍAS FIJOS POR MES DE CORTE (Enero siempre 31, Febrero 28, Marzo 31, Abril 30, etc.)
+    const DIAS_POR_MES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    // ESTADO GLOBAL EN MEMORIA (INICIA COMPLETAMENTE VACÍO)
+    let listaCreditosCargados = [];
+    let corridasIndividuales = {};
+    let consolidadoMensual = [];
+    let pestanaResultadosActiva = null; // null (compacto) | 'indicadores' | 'cronograma'
+
+    function cambiarPestanaResultados(pestana, hacerScroll = false) {
+        pestanaResultadosActiva = pestana;
+        const estadoCompacto = document.getElementById('estado-compacto-resultados');
+        const paneInd = document.getElementById('pane-tab-indicadores');
+        const paneCron = document.getElementById('pane-tab-cronograma');
+        const btnInd = document.getElementById('btn-tab-indicadores');
+        const btnCron = document.getElementById('btn-tab-cronograma');
+
+        if (estadoCompacto) estadoCompacto.classList.add('hidden');
+
+        if (pestana === 'indicadores') {
+            if (paneCron) paneCron.classList.add('hidden');
+            if (paneInd) {
+                paneInd.classList.remove('hidden', 'ct-anim-pane');
+                void paneInd.offsetWidth;
+                paneInd.classList.add('ct-anim-pane');
+            }
+            if (btnInd) btnInd.classList.add('active');
+            if (btnCron) btnCron.classList.remove('active');
+        } else if (pestana === 'cronograma') {
+            if (paneInd) paneInd.classList.add('hidden');
+            if (paneCron) {
+                paneCron.classList.remove('hidden', 'ct-anim-pane');
+                void paneCron.offsetWidth;
+                paneCron.classList.add('ct-anim-pane');
+            }
+            if (btnCron) btnCron.classList.add('active');
+            if (btnInd) btnInd.classList.remove('active');
+        }
+
+        if (hacerScroll) {
+            const sec = document.getElementById('seccion-resultados-consolidados');
+            if (sec) {
+                sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }
+
+    function consolidarYVerCronograma() {
+        ejecutarConsolidacion();
+        cambiarPestanaResultados('cronograma', true);
+    }
+
+    // INICIALIZACIÓN: PÁGINA LIMPIA + ANIMACIÓN SCROLL REVEAL
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputBanquero = document.getElementById('filtroBanquero');
+        if (inputBanquero) {
+            inputBanquero.value = '';
+        }
+
+        const reveals = document.querySelectorAll('.ct-reveal');
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('ct-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.06 });
+            reveals.forEach(el => obs.observe(el));
+        } else {
+            reveals.forEach(el => el.classList.add('ct-visible'));
+        }
+    });
+
+    /**
+     * Calcula los días exactos correspondientes al mes (o meses) del periodo de corte.
+     */
+    function obtenerDiasPeriodoCorte(mesCorte1a12, numeroMesesPeriodo) {
+        let totalDias = 0;
+        const idxMesFinal = mesCorte1a12 - 1;
+        for (let i = 0; i < numeroMesesPeriodo; i++) {
+            const idx = (idxMesFinal - i + 120) % 12;
+            totalDias += DIAS_POR_MES[idx];
+        }
+        return totalDias;
+    }
+
+    /**
+     * COMUNICACIÓN CON GOOGLE APPS SCRIPT (JSONP O GOOGLE.SCRIPT.RUN)
+     */
+    function ejecutarAppsScript(fnName, param, callbackExito, callbackError) {
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+                .withSuccessHandler(callbackExito)
+                .withFailureHandler(callbackError)[fnName](param);
+            return;
+        }
+
+        const callbackName = 'gas_cb_' + Math.round(Math.random() * 1000000);
+        window[callbackName] = function(res) {
+            delete window[callbackName];
+            const scriptEl = document.getElementById(callbackName);
+            if (scriptEl) scriptEl.remove();
+
+            if (res && res.exito !== false) {
+                if (callbackExito) callbackExito(res);
+            } else {
+                if (callbackError) callbackError({ message: (res ? res.mensaje : "Error en backend") });
+            }
+        };
+
+        const script = document.createElement('script');
+        script.id = callbackName;
+        script.src = `${WEB_APP_URL}?action=${fnName}&callback=${callbackName}&data=${encodeURIComponent(JSON.stringify(param))}`;
+        
+        script.onerror = function() {
+            delete window[callbackName];
+            const scriptEl = document.getElementById(callbackName);
+            if (scriptEl) scriptEl.remove();
+            if (callbackError) callbackError({ message: "No se pudo conectar con el servidor." });
+        };
+
+        document.body.appendChild(script);
+    }
+
+    /**
+     * CONSULTAR CRÉDITOS POR NOMBRE DE BANQUERO
+     */
+    function buscarCreditosPorBanqueroJS() {
+        const banquero = document.getElementById('filtroBanquero').value.trim();
+        const statusBox = document.getElementById('statusCargaCreditos');
+
+        if (!banquero) {
+            Swal.fire({
+                title: 'Nombre requerido',
+                text: 'Por favor, ingrese el nombre del banquero para consultar los registros.',
+                icon: 'info',
+                background: '#FFFFFF',
+                color: '#070E46',
+                confirmButtonColor: '#001391'
+            });
+            return;
+        }
+
+        statusBox.className = "text-xs font-bold text-[#001391]";
+        statusBox.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Consultando créditos registrados en Sheets...';
+
+        ejecutarAppsScript(
+            'consultarCreditosPorBanquero',
+            banquero,
+            function(res) {
+                if (res && res.creditos && res.creditos.length > 0) {
+                    listaCreditosCargados = res.creditos.map(c => {
+                        const esq = c.esquemaCreciente || {};
+                        return {
+                            ...c,
+                            pagoInteresesMeses: Number(c.pagoInteresesMeses || esq._pagoInteresesMeses || 1),
+                            seleccionado: true
+                        };
+                    });
+                    statusBox.className = "text-xs font-bold text-[#0F5C6E]";
+                    statusBox.innerText = `✓ ${res.creditos.length} crédito(s) cargado(s) para ${banquero.toUpperCase()}.`;
+                } else {
+                    listaCreditosCargados = [];
+                    statusBox.className = "text-xs font-bold text-amber-700";
+                    statusBox.innerText = `ℹ No se encontraron créditos registrados para "${banquero.toUpperCase()}". Puede agregar uno con "Nuevo Crédito".`;
+                }
+                renderizarListaCreditos(listaCreditosCargados);
+                ejecutarConsolidacion();
+            },
+            function(err) {
+                statusBox.className = "text-xs font-bold text-red-600";
+                statusBox.innerText = "⚠ No fue posible consultar la base de datos.";
+                renderizarListaCreditos([]);
+                ejecutarConsolidacion();
+            }
+        );
+    }
+
+    /**
+     * RENDERIZAR LISTA DE CRÉDITOS EN LA BANDEJA CON CHECKBOXES EJECUTIVOS
+     */
+    function renderizarListaCreditos(creditos) {
+        const contenedor = document.getElementById('contenedorListaCreditos');
+        contenedor.innerHTML = '';
+
+        if (!creditos || creditos.length === 0) {
+            contenedor.innerHTML = `
+                <div class="py-10 px-6 text-center bg-slate-50/80 rounded-2xl border border-dashed border-slate-300 text-slate-500 text-xs">
+                    <i class="fas fa-folder-open text-2xl text-slate-400 mb-2 block"></i>
+                    No hay créditos disponibles para este banquero o criterio de filtrado.
+                </div>`;
+            actualizarContadorSeleccionados();
+            return;
+        }
+
+        creditos.forEach((cr) => {
+            const div = document.createElement('div');
+            div.className = `p-3.5 rounded-xl border transition flex items-center justify-between gap-3 ${
+                cr.seleccionado
+                    ? 'bg-[#F8FBFF] border-[#99C2FF] shadow-sm'
+                    : 'bg-slate-50 border-slate-200 opacity-65'
+            }`;
+
+            let badgeClass = 'badge-otros';
+            const bancoUpper = (cr.banco || '').toUpperCase();
+            if (bancoUpper.includes('BBVA')) badgeClass = 'badge-bbva';
+            else if (bancoUpper.includes('SANTANDER')) badgeClass = 'badge-santander';
+            else if (bancoUpper.includes('SCOTIA')) badgeClass = 'badge-scotia';
+            else if (bancoUpper.includes('BAJIO')) badgeClass = 'badge-bajio';
+            else if (bancoUpper.includes('BANORTE')) badgeClass = 'badge-banorte';
+
+            const plazoAmortM = cr.periodoMeses || 1;
+            const pagoIntM = cr.pagoInteresesMeses || (cr.esquemaCreciente && cr.esquemaCreciente._pagoInteresesMeses) || 1;
+
+            div.innerHTML = `
+                <div class="flex items-start sm:items-center gap-3 min-w-0">
+                    <input type="checkbox" id="chk_${cr.idCredito}" ${cr.seleccionado ? 'checked' : ''} 
+                        onchange="toggleSeleccionCredito('${cr.idCredito}', this.checked)"
+                        class="w-4 h-4 mt-1 sm:mt-0 rounded text-[#001391] focus:ring-[#001391] border-slate-300 cursor-pointer shrink-0">
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="badge-bank ${badgeClass}">${cr.banco}</span>
+                            <span class="font-extrabold text-[#070E46] text-xs truncate">${cr.empresa || 'CLIENTE'}</span>
+                            <span class="text-[10px] font-bold text-[#1464A5] bg-[#EDF5FC] px-2 py-0.5 rounded-full">${cr.tipoAmortizacion}</span>
+                        </div>
+                        <div class="text-[11px] text-slate-600 mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
+                            <span><strong class="text-bbva-navy">No. Cliente:</strong> ${cr.noCliente || 'N/A'}</span>
+                            <span><strong class="text-bbva-navy">Monto:</strong> <span class="text-[#001391] font-bold">${formatoMoneda(cr.monto)}</span></span>
+                            <span><strong class="text-bbva-navy">Inicio:</strong> ${cr.fechaInicio}</span>
+                            <span><strong class="text-bbva-navy">Plazo:</strong> ${cr.plazoAnos}a</span>
+                            <span><strong class="text-bbva-navy">Amort:</strong> ${plazoAmortM}m</span>
+                            <span><strong class="text-bbva-navy">Pago Int:</strong> ${pagoIntM}m</span>
+                            <span><strong class="text-bbva-navy">Tasa:</strong> ${cr.tasaAnual}%</span>
+                            <span><strong class="text-bbva-navy">Gracia:</strong> ${cr.graciaMeses}m</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right shrink-0">
+                    <button type="button" onclick="eliminarCredito('${cr.idCredito}')" title="Eliminar Crédito" class="text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition p-2">
+                        <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
+                </div>
+            `;
+            contenedor.appendChild(div);
+        });
+
+        actualizarContadorSeleccionados();
+    }
+
+    function toggleSeleccionCredito(idCredito, checked) {
+        const cr = listaCreditosCargados.find(c => c.idCredito === idCredito);
+        if (cr) {
+            cr.seleccionado = checked;
+        }
+        filtrarListaCreditosEnMemoria();
+        ejecutarConsolidacion();
+    }
+
+    function seleccionarTodosCreditos(todos) {
+        listaCreditosCargados.forEach(c => c.seleccionado = todos);
+        filtrarListaCreditosEnMemoria();
+        ejecutarConsolidacion();
+    }
+
+    function actualizarContadorSeleccionados() {
+        const count = listaCreditosCargados.filter(c => c.seleccionado).length;
+        document.getElementById('labelCreditosSeleccionados').innerText = `${count} de ${listaCreditosCargados.length} créditos seleccionados`;
+    }
+
+    function filtrarListaCreditosEnMemoria() {
+        const noCliente = document.getElementById('filtroNoCliente').value.trim().toUpperCase();
+        const banco = document.getElementById('filtroBanco').value.trim().toUpperCase();
+
+        const filtrados = listaCreditosCargados.filter(c => {
+            const matchCliente = !noCliente || String(c.noCliente).toUpperCase().includes(noCliente) || String(c.empresa).toUpperCase().includes(noCliente);
+            const matchBanco = (banco === 'TODOS') || String(c.banco).toUpperCase().includes(banco);
+            return matchCliente && matchBanco;
+        });
+
+        renderizarListaCreditos(filtrados);
+    }
+
+    /**
+     * MOTOR DE CÁLCULO INDIVIDUAL MES CON MES PARA CADA PRÉSTAMO
+     */
+    function calcularCorridaIndividual(cr) {
+        const montoObjetivo = Number(cr.monto) || 0;
+        const plazoAnos = Number(cr.plazoAnos) || 1;
+        const plazoAmortMeses = Math.max(1, Number(cr.periodoMeses) || 1);
+        const pagoInteresesMeses = Math.max(1, Number(cr.pagoInteresesMeses || (cr.esquemaCreciente && cr.esquemaCreciente._pagoInteresesMeses) || 1));
+        const graciaMeses = Number(cr.graciaMeses) || 0;
+        const balloonPct = (Number(cr.balloonPct) || 0) / 100;
+        const tasaInteres = (Number(cr.tasaAnual) || 0) / 100;
+
+        const totalMeses = Math.round(plazoAnos * 12);
+
+        const totalPeriodosAmort = Math.round(totalMeses / plazoAmortMeses);
+        const periodosGraciaAmort = Math.floor(graciaMeses / plazoAmortMeses);
+        const periodosAmortActivos = Math.max(1, totalPeriodosAmort - periodosGraciaAmort);
+
+        const partes = (cr.fechaInicio || '2026-08-01').split('-');
+        const anoBase = parseInt(partes[0]);
+        const mesBaseIdx = parseInt(partes[1]) - 1;
+
+        let saldoActual = montoObjetivo;
+        const periodosResultado = [];
+
+        const esLineal = (cr.tipoAmortizacion || 'LINEAL').toUpperCase() === 'LINEAL';
+        const amortBaseLineal = (1 - balloonPct) / periodosAmortActivos;
+        const periodosAmortPorAno = Math.max(1, Math.round(12 / plazoAmortMeses));
+
+        for (let m = 1; m <= totalMeses; m++) {
+            const fechaMes = new Date(anoBase, mesBaseIdx + m, 1);
+            const anoP = Math.ceil(m / 12);
+            const anoCalendario = fechaMes.getFullYear();
+            const mesCalendario = fechaMes.getMonth() + 1;
+            const keyMesAno = `${anoCalendario}-${mesCalendario < 10 ? '0' + mesCalendario : mesCalendario}`;
+
+            const saldoInicial = saldoActual;
+
+            // 1. CÁLCULO DE INTERESES
+            let montoInteres = 0;
+            const tocaPagoInteres = (m % pagoInteresesMeses === 0) || (m === totalMeses);
+            if (tocaPagoInteres && saldoInicial > 0) {
+                const diasCorteInteres = obtenerDiasPeriodoCorte(mesCalendario, pagoInteresesMeses);
+                montoInteres = (saldoInicial * (tasaInteres / 360)) * diasCorteInteres;
+            }
+
+            // 2. CÁLCULO DE AMORTIZACIÓN DE CAPITAL
+            let pctAmort = 0;
+            let amortEfectiva = 0;
+            const tocaAmortizacion = (m % plazoAmortMeses === 0) || (m === totalMeses);
+            const numPeriodoAmortActual = Math.ceil(m / plazoAmortMeses);
+            const superoGracia = numPeriodoAmortActual > periodosGraciaAmort;
+
+            if (tocaAmortizacion && superoGracia && saldoInicial > 0) {
+                if (esLineal) {
+                    pctAmort = (m === totalMeses) ? (amortBaseLineal + balloonPct) : amortBaseLineal;
+                } else {
+                    const mapaPct = cr.esquemaCreciente || {};
+                    const pctAnual = (mapaPct[anoP] !== undefined ? Number(mapaPct[anoP]) : (100 / plazoAnos)) / 100;
+                    const pctBasePeriodo = pctAnual / periodosAmortPorAno;
+                    pctAmort = (m === totalMeses) ? (pctBasePeriodo + balloonPct) : pctBasePeriodo;
+                }
+                const montoAmortTeorico = montoObjetivo * pctAmort;
+                amortEfectiva = Math.min(montoAmortTeorico, saldoInicial);
+            }
+
+            const saldoFinal = Math.max(0, saldoInicial - amortEfectiva);
+            saldoActual = saldoFinal;
+
+            periodosResultado.push({
+                periodoNum: m,
+                keyMesAno: keyMesAno,
+                fecha: fechaMes,
+                anoCalendario: anoCalendario,
+                mesCalendario: mesCalendario,
+                saldoInicial: saldoInicial,
+                amortizacion: amortEfectiva,
+                interes: montoInteres,
+                servicioDeuda: amortEfectiva + montoInteres,
+                saldoFinal: saldoFinal,
+                banco: (cr.banco || 'BBVA').toUpperCase(),
+                idCredito: cr.idCredito
+            });
+        }
+
+        return periodosResultado;
+    }
+
+    /**
+     * MOTOR DE CONSOLIDACIÓN MULTIBANCO MES CON MES
+     */
+    function ejecutarConsolidacion() {
+        const creditosSeleccionados = listaCreditosCargados.filter(c => c.seleccionado);
+
+        if (creditosSeleccionados.length === 0) {
+            consolidadoMensual = [];
+            document.getElementById('tbodyConsolidado').innerHTML = '<tr><td colspan="13" class="p-8 text-center text-slate-400">No hay créditos seleccionados para consolidar.</td></tr>';
+            document.getElementById('tbodyResumenBancos').innerHTML = '<tr><td colspan="5" class="p-5 text-center text-slate-400">Sin datos seleccionados.</td></tr>';
+            document.getElementById('tbodyResumenAnual').innerHTML = '<tr><td colspan="7" class="p-5 text-center text-slate-400">Sin datos seleccionados.</td></tr>';
+            document.getElementById('labelTotalMeses').innerText = 'Meses proyectados: 0';
+            document.getElementById('labelTotalAmortizadoConsolidado').innerText = 'Total Capital Amortizado: $0.00';
+            document.getElementById('labelTotalInteresesConsolidado').innerText = 'Total Intereses: $0.00';
+            document.getElementById('labelTotalServicioDeudaConsolidado').innerText = 'Total Servicio Deuda: $0.00';
+            actualizarKPIsConsolidados([], creditosSeleccionados);
+            return;
+        }
+
+        corridasIndividuales = {};
+        let minKeyMes = null;
+        let maxKeyMes = null;
+
+        let tieneBBVA = false;
+        let tieneSantander = false;
+        let tieneScotia = false;
+        let tieneBajio = false;
+        let tieneOtros = false;
+
+        creditosSeleccionados.forEach(cr => {
+            const b = (cr.banco || 'BBVA').toUpperCase();
+            if (b.includes('BBVA')) tieneBBVA = true;
+            else if (b.includes('SANTANDER')) tieneSantander = true;
+            else if (b.includes('SCOTIA')) tieneScotia = true;
+            else if (b.includes('BAJIO')) tieneBajio = true;
+            else tieneOtros = true;
+
+            const corrida = calcularCorridaIndividual(cr);
+            corridasIndividuales[cr.idCredito] = corrida;
+            corrida.forEach(item => {
+                if (!minKeyMes || item.keyMesAno < minKeyMes) minKeyMes = item.keyMesAno;
+                if (!maxKeyMes || item.keyMesAno > maxKeyMes) maxKeyMes = item.keyMesAno;
+            });
+        });
+
+        const listaMesesOrdenados = [];
+        if (minKeyMes && maxKeyMes) {
+            const [minY, minM] = minKeyMes.split('-').map(Number);
+            const [maxY, maxM] = maxKeyMes.split('-').map(Number);
+            let currDate = new Date(minY, minM - 1, 1);
+            const endDate = new Date(maxY, maxM - 1, 1);
+
+            while (currDate <= endDate) {
+                const y = currDate.getFullYear();
+                const m = currDate.getMonth() + 1;
+                listaMesesOrdenados.push(`${y}-${m < 10 ? '0' + m : m}`);
+                currDate = new Date(y, m, 1);
+            }
+        }
+
+        consolidadoMensual = [];
+        let sumaAmortizacionesGlobal = 0;
+        let sumaSaldosMultiplicados = 0;
+
+        listaMesesOrdenados.forEach((keyMes, index) => {
+            let amortBBVA = 0;
+            let amortSantander = 0;
+            let amortScotia = 0;
+            let amortBajio = 0;
+            let amortOtros = 0;
+            let interesMes = 0;
+            let saldoInicialMes = 0;
+            let saldoFinalMes = 0;
+
+            creditosSeleccionados.forEach(cr => {
+                const corrida = corridasIndividuales[cr.idCredito];
+                const registroMes = corrida.find(r => r.keyMesAno === keyMes);
+
+                if (registroMes) {
+                    saldoInicialMes += registroMes.saldoInicial;
+                    interesMes += registroMes.interes;
+                    saldoFinalMes += registroMes.saldoFinal;
+
+                    const b = registroMes.banco;
+                    if (b.includes('BBVA')) amortBBVA += registroMes.amortizacion;
+                    else if (b.includes('SANTANDER')) amortSantander += registroMes.amortizacion;
+                    else if (b.includes('SCOTIA')) amortScotia += registroMes.amortizacion;
+                    else if (b.includes('BAJIO')) amortBajio += registroMes.amortizacion;
+                    else amortOtros += registroMes.amortizacion;
+                } else {
+                    const anteriores = corrida.filter(r => r.keyMesAno < keyMes);
+                    if (anteriores.length > 0) {
+                        const ultimo = anteriores[anteriores.length - 1];
+                        saldoInicialMes += ultimo.saldoFinal;
+                        saldoFinalMes += ultimo.saldoFinal;
+                    } else {
+                        saldoInicialMes += Number(cr.monto) || 0;
+                        saldoFinalMes += Number(cr.monto) || 0;
+                    }
+                }
+            });
+
+            const totalAmortMes = amortBBVA + amortSantander + amortScotia + amortBajio + amortOtros;
+            const servicioDeudaMes = totalAmortMes + interesMes;
+            sumaAmortizacionesGlobal += totalAmortMes;
+            sumaSaldosMultiplicados += saldoInicialMes;
+
+            consolidadoMensual.push({
+                periodo: index + 1,
+                keyMesAno: keyMes,
+                ano: parseInt(keyMes.split('-')[0]),
+                mes: parseInt(keyMes.split('-')[1]),
+                saldoInicial: saldoInicialMes,
+                amortBBVA: amortBBVA,
+                amortSantander: amortSantander,
+                amortScotia: amortScotia,
+                amortBajio: amortBajio,
+                amortOtros: amortOtros,
+                tieneBBVA: tieneBBVA,
+                tieneSantander: tieneSantander,
+                tieneScotia: tieneScotia,
+                tieneBajio: tieneBajio,
+                tieneOtros: tieneOtros,
+                totalAmortizacion: totalAmortMes,
+                totalIntereses: interesMes,
+                servicioDeuda: servicioDeudaMes,
+                saldoFinal: saldoFinalMes
+            });
+        });
+
+        renderizarTablaConsolidada(consolidadoMensual);
+        renderizarResumenBancos(creditosSeleccionados);
+        renderizarResumenAnual(consolidadoMensual);
+        actualizarKPIsConsolidados(consolidadoMensual, creditosSeleccionados, sumaSaldosMultiplicados);
+    }
+
+    /**
+     * RENDERIZAR TABLA CRONOLÓGICA DETALLADA MES CON MES (COLORES CORPORATIVOS CLAROS)
+     */
+    function renderizarTablaConsolidada(listaMeses) {
+        const tbody = document.getElementById('tbodyConsolidado');
+        tbody.innerHTML = '';
+
+        let totalAmortAcum = 0;
+        let totalInteresAcum = 0;
+        let totalServicioAcum = 0;
+
+        listaMeses.forEach(m => {
+            totalAmortAcum += m.totalAmortizacion;
+            totalInteresAcum += m.totalIntereses;
+            totalServicioAcum += m.servicioDeuda;
+
+            const tr = document.createElement('tr');
+
+            const mesesNombre = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            const strFecha = `${mesesNombre[m.mes - 1]} ${m.ano}`;
+
+            const txtBBVA = m.tieneBBVA ? formatoMoneda(m.amortBBVA) : '-';
+            const txtSantander = m.tieneSantander ? formatoMoneda(m.amortSantander) : '-';
+            const txtScotia = m.tieneScotia ? formatoMoneda(m.amortScotia) : '-';
+            const txtBajio = m.tieneBajio ? formatoMoneda(m.amortBajio) : '-';
+            const txtOtros = m.tieneOtros ? formatoMoneda(m.amortOtros) : '-';
+
+            tr.innerHTML = `
+                <td class="font-bold text-slate-600">${m.periodo}</td>
+                <td class="font-bold text-[#001391]">${strFecha}</td>
+                <td class="font-semibold text-slate-500">${m.ano}</td>
+                <td class="text-right font-semibold text-[#070E46]">${formatoMoneda(m.saldoInicial)}</td>
+                <td class="text-right text-[#001391] font-semibold">${txtBBVA}</td>
+                <td class="text-right text-[#B91C1C] font-semibold">${txtSantander}</td>
+                <td class="text-right text-[#BE123C] font-semibold">${txtScotia}</td>
+                <td class="text-right text-[#A16207] font-semibold">${txtBajio}</td>
+                <td class="text-right text-[#4F46E5] font-semibold">${txtOtros}</td>
+                <td class="text-right text-[#0F5C6E] font-extrabold bg-[#F4FBFB]">${formatoMoneda(m.totalAmortizacion)}</td>
+                <td class="text-right text-[#B45309] font-semibold">${formatoMoneda(m.totalIntereses)}</td>
+                <td class="text-right text-[#001391] font-extrabold bg-[#F2F7FF]">${formatoMoneda(m.servicioDeuda)}</td>
+                <td class="text-right font-extrabold text-[#070E46]">${formatoMoneda(m.saldoFinal)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('labelTotalMeses').innerText = `Meses proyectados: ${listaMeses.length}`;
+        document.getElementById('labelTotalAmortizadoConsolidado').innerText = `Total Capital Amortizado: ${formatoMoneda(totalAmortAcum)}`;
+        document.getElementById('labelTotalInteresesConsolidado').innerText = `Total Intereses: ${formatoMoneda(totalInteresAcum)}`;
+        document.getElementById('labelTotalServicioDeudaConsolidado').innerText = `Total Servicio Deuda: ${formatoMoneda(totalServicioAcum)}`;
+    }
+
+    /**
+     * RENDERIZAR RESUMEN POR BANCO
+     */
+    function renderizarResumenBancos(creditos) {
+        const tbody = document.getElementById('tbodyResumenBancos');
+        tbody.innerHTML = '';
+
+        const grupos = {};
+        let totalDeuda = 0;
+
+        creditos.forEach(c => {
+            const b = (c.banco || 'OTROS').toUpperCase();
+            if (!grupos[b]) {
+                grupos[b] = { banco: b, numCreditos: 0, monto: 0, interesEst: 0 };
+            }
+            const m = Number(c.monto) || 0;
+            grupos[b].numCreditos += 1;
+            grupos[b].monto += m;
+            totalDeuda += m;
+
+            const corrida = corridasIndividuales[c.idCredito] || [];
+            const sumInt = corrida.reduce((acc, r) => acc + r.interes, 0);
+            grupos[b].interesEst += sumInt;
+        });
+
+        Object.values(grupos).forEach(g => {
+            const pct = totalDeuda > 0 ? (g.monto / totalDeuda) * 100 : 0;
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-[#F5F9FF] transition-colors";
+            tr.innerHTML = `
+                <td class="p-3 font-extrabold text-[#070E46] flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full ${g.banco.includes('BBVA') ? 'bg-[#001391]' : 'bg-[#C2590A]'}"></span>
+                    ${g.banco}
+                </td>
+                <td class="p-3 text-center font-bold text-slate-700">${g.numCreditos}</td>
+                <td class="p-3 text-right font-extrabold text-[#001391]">${formatoMoneda(g.monto)}</td>
+                <td class="p-3 text-right font-bold text-slate-700">${pct.toFixed(2)}%</td>
+                <td class="p-3 text-right font-bold text-[#B45309]">${formatoMoneda(g.interesEst)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    /**
+     * RENDERIZAR RESUMEN POR AÑO CALENDARIO (CON SERVICIO DE LA DEUDA)
+     */
+    function renderizarResumenAnual(listaMeses) {
+        const tbody = document.getElementById('tbodyResumenAnual');
+        tbody.innerHTML = '';
+
+        const porAno = {};
+
+        listaMeses.forEach(m => {
+            if (!porAno[m.ano]) {
+                porAno[m.ano] = {
+                    ano: m.ano,
+                    amortBBVA: 0,
+                    amortOtros: 0,
+                    totalAmort: 0,
+                    intereses: 0,
+                    servicioDeuda: 0,
+                    saldoCierre: m.saldoFinal
+                };
+            }
+            porAno[m.ano].amortBBVA += m.amortBBVA;
+            porAno[m.ano].amortOtros += (m.amortSantander + m.amortScotia + m.amortBajio + m.amortOtros);
+            porAno[m.ano].totalAmort += m.totalAmortizacion;
+            porAno[m.ano].intereses += m.totalIntereses;
+            porAno[m.ano].servicioDeuda += (m.totalAmortizacion + m.totalIntereses);
+            porAno[m.ano].saldoCierre = m.saldoFinal;
+        });
+
+        Object.values(porAno).forEach(a => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-[#F5F9FF] transition-colors";
+            tr.innerHTML = `
+                <td class="p-3 font-extrabold text-[#070E46]">${a.ano}</td>
+                <td class="p-3 text-right font-bold text-[#001391]">${formatoMoneda(a.amortBBVA)}</td>
+                <td class="p-3 text-right font-bold text-[#9A4206]">${formatoMoneda(a.amortOtros)}</td>
+                <td class="p-3 text-right font-extrabold text-[#0F5C6E]">${formatoMoneda(a.totalAmort)}</td>
+                <td class="p-3 text-right font-bold text-[#B45309]">${formatoMoneda(a.intereses)}</td>
+                <td class="p-3 text-right font-extrabold text-[#001391] bg-[#F2F7FF]">${formatoMoneda(a.servicioDeuda)}</td>
+                <td class="p-3 text-right font-extrabold text-[#070E46]">${formatoMoneda(a.saldoCierre)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    /**
+     * ACTUALIZACIÓN DE TARJETAS KPIS CONSOLIDADOS
+     */
+    function actualizarKPIsConsolidados(listaMeses, creditos, sumaSaldosMult = 0) {
+        const deudaTotal = creditos.reduce((acc, c) => acc + (Number(c.monto) || 0), 0);
+        let deudaBBVA = 0;
+        let deudaOtros = 0;
+        const bancosSet = new Set();
+
+        creditos.forEach(c => {
+            const m = Number(c.monto) || 0;
+            const b = (c.banco || '').toUpperCase();
+            bancosSet.add(b);
+            if (b.includes('BBVA')) {
+                deudaBBVA += m;
+            } else {
+                deudaOtros += m;
+            }
+        });
+
+        document.getElementById('kpiDeudaTotal').innerText = formatoMoneda(deudaTotal);
+        document.getElementById('kpiNumBancos').innerText = `${bancosSet.size} Banco(s) Consolidado(s)`;
+
+        document.getElementById('kpiDeudaBBVA').innerText = formatoMoneda(deudaBBVA);
+        const pctBBVA = deudaTotal > 0 ? (deudaBBVA / deudaTotal) * 100 : 0;
+        document.getElementById('kpiPctBBVA').innerText = `${pctBBVA.toFixed(1)}% del pasivo total`;
+
+        document.getElementById('kpiDeudaOtros').innerText = formatoMoneda(deudaOtros);
+        const pctOtros = deudaTotal > 0 ? (deudaOtros / deudaTotal) * 100 : 0;
+        document.getElementById('kpiPctOtros').innerText = `${pctOtros.toFixed(1)}% bancos externos`;
+
+        let vidaMediaConsolidada = 0;
+        if (deudaTotal > 0 && listaMeses.length > 0) {
+            vidaMediaConsolidada = (sumaSaldosMult / deudaTotal) / 12;
+        }
+        document.getElementById('kpiVidaMediaConsolidada').innerText = vidaMediaConsolidada.toFixed(2);
+
+        if (listaMeses.length > 0) {
+            document.getElementById('labelRangoFechas').innerText = `Vigencia: ${listaMeses[0].keyMesAno} al ${listaMeses[listaMeses.length - 1].keyMesAno}`;
+        } else {
+            document.getElementById('labelRangoFechas').innerText = 'Vigencia: Sin datos';
+        }
+    }
+
+    function formatoMoneda(num) {
+        return '$' + Number(num || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    /**
+     * MODAL NUEVO CRÉDITO Y ESQUEMA CRECIENTE
+     */
+    function abrirModalNuevoCredito() {
+        const banqueroActual = document.getElementById('filtroBanquero').value.trim();
+        document.getElementById('m_banquero').value = banqueroActual;
+        document.getElementById('m_fechaInicio').value = new Date().toISOString().split('T')[0];
+        document.getElementById('m_pagoInteresesMeses').value = 1;
+        document.getElementById('modalNuevoCredito').classList.remove('hidden');
+        toggleEsquemaCrecienteModal();
+    }
+
+    function cerrarModalNuevoCredito() {
+        document.getElementById('modalNuevoCredito').classList.add('hidden');
+    }
+
+    function toggleEsquemaCrecienteModal() {
+        const tipo = document.getElementById('m_tipoAmort').value;
+        const seccion = document.getElementById('seccionCrecienteModal');
+        if (tipo === 'CRECIENTE') {
+            seccion.classList.remove('hidden');
+            actualizarCamposCrecienteModal();
+        } else {
+            seccion.classList.add('hidden');
+        }
+    }
+
+    function actualizarCamposCrecienteModal() {
+        const plazo = Math.max(1, Math.floor(parseFloat(document.getElementById('m_plazoAnos').value) || 1));
+        const contenedor = document.getElementById('contenedorInputsCrecienteModal');
+        contenedor.innerHTML = '';
+
+        const def = (100 / plazo).toFixed(2);
+        for (let i = 1; i <= plazo; i++) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <label class="text-[11px] text-slate-600 font-bold block mb-1">Año ${i} (%)</label>
+                <input type="number" step="0.01" data-anomodal="${i}" value="${def}" oninput="calcularSumaModal()" class="input-user-plain py-1.5 px-2.5 text-xs">
+            `;
+            contenedor.appendChild(div);
+        }
+        calcularSumaModal();
+    }
+
+    function calcularSumaModal() {
+        const inputs = document.querySelectorAll('#contenedorInputsCrecienteModal input[data-anomodal]');
+        let suma = 0;
+        inputs.forEach(inp => suma += parseFloat(inp.value) || 0);
+        const balloon = parseFloat(document.getElementById('m_balloonPct').value) || 0;
+        const total = suma + balloon;
+        const badge = document.getElementById('badgeSumaModal');
+        badge.innerText = `Suma: ${total.toFixed(2)}%`;
+        if (Math.abs(total - 100) < 0.05) {
+            badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#E6F6F4] text-[#0B5D56] border border-[#99DCD6]';
+        } else {
+            badge.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200';
+        }
+    }
+
+    function guardarCreditoModal(event) {
+        event.preventDefault();
+
+        const tipo = document.getElementById('m_tipoAmort').value;
+        const pagoInteresesMeses = Math.max(1, parseInt(document.getElementById('m_pagoInteresesMeses').value) || 1);
+        const esquema = {
+            _pagoInteresesMeses: pagoInteresesMeses
+        };
+
+        if (tipo === 'CRECIENTE') {
+            const inputs = document.querySelectorAll('#contenedorInputsCrecienteModal input[data-anomodal]');
+            let suma = 0;
+            inputs.forEach(inp => {
+                const val = parseFloat(inp.value) || 0;
+                esquema[inp.dataset.anomodal] = val;
+                suma += val;
+            });
+            const balloon = parseFloat(document.getElementById('m_balloonPct').value) || 0;
+            if (Math.abs((suma + balloon) - 100) >= 0.1) {
+                Swal.fire({
+                    title: 'Atención',
+                    text: 'La suma de porcentajes anuales más el Balloon debe ser exactamente 100%.',
+                    icon: 'warning',
+                    background: '#FFFFFF',
+                    color: '#070E46',
+                    confirmButtonColor: '#001391'
+                });
+                return;
+            }
+        }
+
+        const nuevoCredito = {
+            idCredito: "CR-" + new Date().getTime(),
+            banquero: document.getElementById('m_banquero').value.trim().toUpperCase(),
+            noCliente: document.getElementById('m_noCliente').value.trim(),
+            empresa: document.getElementById('m_empresa').value.trim().toUpperCase(),
+            banco: document.getElementById('m_banco').value.trim().toUpperCase(),
+            tipoAmortizacion: tipo,
+            monto: parseFloat(document.getElementById('m_monto').value) || 0,
+            fechaInicio: document.getElementById('m_fechaInicio').value,
+            plazoAnos: parseFloat(document.getElementById('m_plazoAnos').value) || 1,
+            periodoMeses: parseInt(document.getElementById('m_periodoMeses').value) || 1,
+            pagoInteresesMeses: pagoInteresesMeses,
+            graciaMeses: parseInt(document.getElementById('m_graciaMeses').value) || 0,
+            tasaAnual: parseFloat(document.getElementById('m_tasaAnual').value) || 10,
+            balloonPct: parseFloat(document.getElementById('m_balloonPct').value) || 0,
+            esquemaCreciente: esquema,
+            seleccionado: true
+        };
+
+        const btnGuardar = document.getElementById('btnGuardarModal');
+        btnGuardar.disabled = true;
+        btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+        if (!document.getElementById('filtroBanquero').value.trim()) {
+            document.getElementById('filtroBanquero').value = nuevoCredito.banquero;
+        }
+
+        listaCreditosCargados.unshift(nuevoCredito);
+        filtrarListaCreditosEnMemoria();
+        ejecutarConsolidacion();
+
+        ejecutarAppsScript(
+            'guardarCreditoAmortizacion',
+            nuevoCredito,
+            function(res) {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar Crédito';
+                cerrarModalNuevoCredito();
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'Crédito registrado correctamente.',
+                    icon: 'success',
+                    background: '#FFFFFF',
+                    color: '#070E46',
+                    confirmButtonColor: '#001391'
+                });
+            },
+            function(err) {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = '<i class="fas fa-save"></i> Guardar Crédito';
+                cerrarModalNuevoCredito();
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'Crédito integrado correctamente.',
+                    icon: 'success',
+                    background: '#FFFFFF',
+                    color: '#070E46',
+                    confirmButtonColor: '#001391'
+                });
+            }
+        );
+    }
+
+    function eliminarCredito(idCredito) {
+        Swal.fire({
+            title: '¿Eliminar crédito?',
+            text: 'Se removerá de la consolidación.',
+            icon: 'warning',
+            background: '#FFFFFF',
+            color: '#070E46',
+            showCancelButton: true,
+            confirmButtonColor: '#B91C1C',
+            cancelButtonColor: '#64748B',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then(result => {
+            if (result.isConfirmed) {
+                listaCreditosCargados = listaCreditosCargados.filter(c => c.idCredito !== idCredito);
+                filtrarListaCreditosEnMemoria();
+                ejecutarConsolidacion();
+
+                ejecutarAppsScript('eliminarCreditoAmortizacion', idCredito, null, null);
+            }
+        });
+    }
+
+    /**
+     * REDIRIGIR A CUADROS DE PASIVOS PASANDO EL CLIENTE Y CRÉDITOS SELECCIONADOS
+     */
+    function redirigirCuadrosPasivos() {
+        const creditosSeleccionados = listaCreditosCargados.filter(c => c.seleccionado);
+        if (creditosSeleccionados.length === 0) {
+            Swal.fire({
+                title: 'Atención',
+                text: 'No hay créditos seleccionados para generar el cuadro de pasivos. Selecciona al menos uno o busca un banquero.',
+                icon: 'warning',
+                background: '#FFFFFF',
+                color: '#070E46',
+                confirmButtonColor: '#001391'
+            });
+            return;
+        }
+        
+        const noCliente = creditosSeleccionados[0].noCliente;
+        const empresa = creditosSeleccionados[0].empresa;
+        
+        sessionStorage.setItem('creditos_transferencia', JSON.stringify(creditosSeleccionados));
+        
+        const params = new URLSearchParams();
+        params.append("no_cliente", noCliente);
+        params.append("empresa", empresa);
+        
+        window.open(`CUADROS_PASIVOS_EDIT.html?${params.toString()}`, '_blank');
+    }
+
+    /**
+     * EXPORTAR CORRIDA CONSOLIDADA EN EXCEL (.XLSX) CON FORMATO FINANCIERO
+     */
+    async function exportarExcelConsolidado() {
+        if (consolidadoMensual.length === 0) {
+            Swal.fire({
+                title: 'Aviso',
+                text: 'No hay datos consolidados para exportar.',
+                icon: 'warning',
+                background: '#FFFFFF',
+                color: '#070E46',
+                confirmButtonColor: '#001391'
+            });
+            return;
+        }
+
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Amortización Consolidada');
+        sheet.views = [{ showGridLines: true }];
+
+        sheet.mergeCells('A1:M1');
+        const title = sheet.getCell('A1');
+        title.value = 'MODELO DE AMORTIZACIÓN CONSOLIDADA MULTIBANCO';
+        title.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FFFFFFFF' } };
+        title.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF070E46' } };
+        title.alignment = { vertical: 'middle', horizontal: 'center' };
+        sheet.getRow(1).height = 32;
+
+        sheet.mergeCells('A3:D3');
+        sheet.getCell('A3').value = 'RESUMEN EJECUTIVO DE LA DEUDA CONSOLIDADA';
+        sheet.getCell('A3').font = { bold: true, color: { argb: 'FFFFFFFF' } };
+        sheet.getCell('A3').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF001391' } };
+
+        const resumenData = [
+            ['Deuda Total Consolidada:', parseFloat(document.getElementById('kpiDeudaTotal').innerText.replace(/[^0-9.-]+/g, "")), 'Vida Media Consolidada:', parseFloat(document.getElementById('kpiVidaMediaConsolidada').innerText)],
+            ['Deuda con BBVA:', parseFloat(document.getElementById('kpiDeudaBBVA').innerText.replace(/[^0-9.-]+/g, "")), 'Deuda Otros Bancos:', parseFloat(document.getElementById('kpiDeudaOtros').innerText.replace(/[^0-9.-]+/g, ""))],
+            ['Banquero Asignado:', document.getElementById('filtroBanquero').value.toUpperCase() || 'NO ESPECIFICADO', 'Meses Proyectados:', consolidadoMensual.length]
+        ];
+
+        resumenData.forEach((rowVals, idx) => {
+            const r = sheet.getRow(4 + idx);
+            r.getCell(1).value = rowVals[0]; r.getCell(1).font = { bold: true };
+            r.getCell(2).value = rowVals[1];
+            r.getCell(3).value = rowVals[2]; r.getCell(3).font = { bold: true };
+            r.getCell(4).value = rowVals[3];
+
+            if (typeof rowVals[1] === 'number') r.getCell(2).numFmt = '"$"#,##0.00';
+            if (typeof rowVals[3] === 'number' && idx < 2) r.getCell(4).numFmt = (idx === 0 ? '0.00' : '"$"#,##0.00');
+
+            for (let c = 1; c <= 4; c++) {
+                r.getCell(c).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+                r.getCell(c).border = {
+                    top: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+                    left: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+                    bottom: { style: 'thin', color: { argb: 'FFCBD5E1' } },
+                    right: { style: 'thin', color: { argb: 'FFCBD5E1' } }
+                };
+            }
+        });
+
+        const startRow = 9;
+        const headers = [
+            '# Mes', 'Fecha (Mes/Año)', 'Año', 'Saldo Inicial Consolidado',
+            'Amort. BBVA ($)', 'Amort. Santander ($)', 'Amort. Scotiabank ($)',
+            'Amort. BanBajío ($)', 'Amort. Otros ($)', 'Total Amortizado ($)',
+            'Total Intereses ($)', 'Servicio Deuda ($)', 'Saldo Final Consolidado'
+        ];
+
+        const headerRow = sheet.getRow(startRow);
+        headers.forEach((h, i) => {
+            const cell = headerRow.getCell(i + 1);
+            cell.value = h;
+            cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF001391' } };
+            cell.alignment = { horizontal: 'center', vertical: 'middle' };
+        });
+
+        consolidadoMensual.forEach((m, idx) => {
+            const r = sheet.getRow(startRow + 1 + idx);
+            r.getCell(1).value = m.periodo; r.getCell(1).alignment = { horizontal: 'center' };
+            r.getCell(2).value = m.keyMesAno; r.getCell(2).alignment = { horizontal: 'center' };
+            r.getCell(3).value = m.ano; r.getCell(3).alignment = { horizontal: 'center' };
+
+            r.getCell(4).value = m.saldoInicial; r.getCell(4).numFmt = '"$"#,##0.00';
+
+            if (m.tieneBBVA) { r.getCell(5).value = m.amortBBVA; r.getCell(5).numFmt = '"$"#,##0.00'; } else { r.getCell(5).value = '-'; r.getCell(5).alignment = { horizontal: 'center' }; }
+            if (m.tieneSantander) { r.getCell(6).value = m.amortSantander; r.getCell(6).numFmt = '"$"#,##0.00'; } else { r.getCell(6).value = '-'; r.getCell(6).alignment = { horizontal: 'center' }; }
+            if (m.tieneScotia) { r.getCell(7).value = m.amortScotia; r.getCell(7).numFmt = '"$"#,##0.00'; } else { r.getCell(7).value = '-'; r.getCell(7).alignment = { horizontal: 'center' }; }
+            if (m.tieneBajio) { r.getCell(8).value = m.amortBajio; r.getCell(8).numFmt = '"$"#,##0.00'; } else { r.getCell(8).value = '-'; r.getCell(8).alignment = { horizontal: 'center' }; }
+            if (m.tieneOtros) { r.getCell(9).value = m.amortOtros; r.getCell(9).numFmt = '"$"#,##0.00'; } else { r.getCell(9).value = '-'; r.getCell(9).alignment = { horizontal: 'center' }; }
+
+            r.getCell(10).value = m.totalAmortizacion; r.getCell(10).numFmt = '"$"#,##0.00'; r.getCell(10).font = { bold: true };
+            r.getCell(11).value = m.totalIntereses; r.getCell(11).numFmt = '"$"#,##0.00';
+            r.getCell(12).value = m.servicioDeuda; r.getCell(12).numFmt = '"$"#,##0.00'; r.getCell(12).font = { bold: true };
+            r.getCell(13).value = m.saldoFinal; r.getCell(13).numFmt = '"$"#,##0.00'; r.getCell(13).font = { bold: true };
+
+            const bg = (idx % 2 === 0) ? 'FFF8FAFC' : 'FFFFFFFF';
+            for (let col = 1; col <= 13; col++) {
+                r.getCell(col).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bg } };
+                r.getCell(col).border = {
+                    bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
+                    right: { style: 'thin', color: { argb: 'FFE2E8F0' } }
+                };
+            }
+        });
+
+        sheet.columns.forEach(col => col.width = 16);
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Amortizacion_Consolidada_${new Date().toISOString().split('T')[0]}.xlsx`;
+        link.click();
+    }
+</script>
+</body>
+</html>
